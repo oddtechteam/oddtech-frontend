@@ -9,7 +9,7 @@ import { Visibility, VisibilityOff, Mail, Lock } from '@mui/icons-material';
 import FaceLogin from '../FaceRecognition/FaceLogin';
 
 // ✅ use our API client helpers
-import { login as apiLogin, googleAuthUrl } from '../lib/api';
+import { login as apiLogin, googleAuthUrl } from '../../lib/api';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
