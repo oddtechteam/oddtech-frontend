@@ -1,6 +1,6 @@
-// src/lib/api.js
+// In prod (Railway) this comes from service Variables.
+// In dev, we fall back to the Vite proxy at /api.
 const BASE = import.meta.env.VITE_API_BASE_URL || '/api';
-export { BASE };
 
 export async function login(body) {
   const res = await fetch(`${BASE}/api/auth/login`, {
@@ -8,13 +8,8 @@ export async function login(body) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  if (!res.ok) {
-    // try to read server message
-    let msg = 'Login failed';
-    try { const j = await res.json(); msg = j.message || msg; } catch {}
-    throw new Error(msg);
-  }
-  return res.json();
+  return res;
 }
 
-export const googleAuthUrl = () => `${BASE}/oauth2/authorization/google`;
+// add other calls here and keep all API URLs in one place:
+export const getUsers = () => fetch(`${BASE}/api/users/all`);
