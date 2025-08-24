@@ -1,15 +1,21 @@
-// src/Pages/Login.jsx
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import {
-  CardActions, TextField, InputAdornment, IconButton, Button, Snackbar, Alert
+  Card,
+  CardContent,
+  CardHeader,
+  CardActions,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Button,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { Visibility, VisibilityOff, Mail, Lock } from '@mui/icons-material';
-import FaceLogin from '../FaceRecognition/FaceLogin';
-
-// ✅ use our API client helpers
-import { login as apiLogin, googleAuthUrl } from '../../lib/api';
+import axios from 'axios';
+import FaceLogin from '../FaceRecognition/FaceLogin'; // Adjust the import path as necessary
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,30 +27,61 @@ const Login = () => {
   const [loggedUser, setLoggedUser] = useState(null);
 
   const navigate = useNavigate();
-
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
-    if (user && token) {
-      if (user.role === 'ADMIN') navigate('/admindashboard', { replace: true });
-      else if (user.role === 'EMPLOYEE') navigate('/employeedashboard', { replace: true });
-    }
-  }, [navigate]);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: { email: '', password: '' }
+    if (user && token) {
+      if (user.role === 'ADMIN') {
+        navigate('/admindashboard', { replace: true });
+      } else if (user.role === 'EMPLOYEE') {
+        navigate('/employeedashboard', { replace: true });
+      }
+    }
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    }
   });
 
-  const togglePasswordVisibility = () => setShowPassword(v => !v);
-  const handleCloseSnackbar = () => setOpenSnackbar(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  // ✅ call backend via helper (env-driven)
-  const onSubmit = async (data) => {
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const loginUser = async (credentials) => {
     try {
       setIsLoading(true);
-      const response = await apiLogin(data);
+      const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        throw new Error(error.response.data.message || 'Login failed');
+      } else if (error.request) {
+        throw new Error('No response from server');
+      } else {
+        throw new Error('Error setting up request');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      if (response?.userId) {
+  const onSubmit = async (data) => {
+    try {
+      const response = await loginUser(data);
+
+      if (response.userId) {
         const userObj = {
           id: response.userId,
           role: response.userRole,
@@ -61,14 +98,14 @@ const Login = () => {
           setShowFaceLogin(true);
         }
       } else {
-        throw new Error('Invalid credentials');
+        setIsError(true);
+        setSnackbarMessage('Invalid Credentials');
+        setOpenSnackbar(true);
       }
-    } catch (err) {
+    } catch (error) {
       setIsError(true);
-      setSnackbarMessage(err.message || 'Login failed');
+      setSnackbarMessage(error.message || 'Login Failed');
       setOpenSnackbar(true);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -82,17 +119,20 @@ const Login = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <TextField
-              placeholder="Email"
+              placeholder='Email'
+              size="small"
               variant="outlined"
               fullWidth
-              size="small"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <Mail fontSize="small" color="action" />
                   </InputAdornment>
                 ),
-                sx: { borderRadius: '12px', height: '40px' }
+                sx: {
+                  borderRadius: '12px',
+                  height: '40px',
+                }
               }}
               {...register('email', {
                 required: 'Email is required',
@@ -106,12 +146,17 @@ const Login = () => {
             />
 
             <TextField
-              placeholder="Password"
+              placeholder='Password'
+              size="small"
               variant="outlined"
               fullWidth
-              size="small"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
+                sx: {
+                  borderRadius: '12px',
+                  height: '40px',
+                  marginTop: '8px'
+                },
                 startAdornment: (
                   <InputAdornment position="start">
                     <Lock fontSize="small" color="action" />
@@ -123,10 +168,11 @@ const Login = () => {
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                ),
-                sx: { borderRadius: '12px', height: '40px', marginTop: '8px' }
+                )
               }}
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', {
+                required: 'Password is required'
+              })}
               error={!!errors.password}
               helperText={errors.password?.message}
             />
@@ -135,13 +181,23 @@ const Login = () => {
               <label className="flex items-center">
                 <input type="checkbox" className="mr-2" /> Remember me
               </label>
-              <button type="button" className="text-blue-600 hover:underline">
+              <button
+                type="button"
+                className="hover:underline"
+                style={{ color: '#00A3E1' }}
+              >
                 Forgot password?
               </button>
             </div>
 
-            <Button type="submit" variant="contained" fullWidth
-              sx={{ backgroundColor: '#00A3E1', '&:hover': { backgroundColor: '#0081B4' } }}
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                backgroundColor: '#00A3E1',
+                '&:hover': { backgroundColor: '#0081B4' }
+              }}
               disabled={isLoading}
             >
               {isLoading ? 'Logging in...' : 'Verify with Face'}
@@ -149,14 +205,13 @@ const Login = () => {
 
             <div className="text-center text-gray-400">or continue with</div>
 
-            {/* ✅ Google OAuth uses env-driven base too */}
-            <a
-              href={googleAuthUrl()}
-              className="w-full border border-gray-300 hover:bg-gray-100 flex items-center justify-center py-2 rounded-md no-underline"
+            <button
+              type="button"
+              className="w-full border border-gray-300 hover:bg-gray-100 flex items-center justify-center py-2 rounded-md"
             >
               <span className="mr-2 text-xl" style={{ color: '#00A3E1' }}>G</span>
               Continue with Google
-            </a>
+            </button>
           </form>
 
           <CardActions>
@@ -164,18 +219,32 @@ const Login = () => {
               fullWidth
               onClick={() => navigate('/contactus')}
               disabled={isLoading}
-              sx={{ fontSize: 'small', color: '#00A3E1', '&:hover': { backgroundColor: 'rgba(0,163,225,.08)' } }}
+              sx={{
+                fontSize: 'small',
+                color: '#00A3E1',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  color: '#0081B4',
+                  textDecoration: 'underline'
+                }
+              }}
             >
-              Don&apos;t have an account? Contact Admin
+              Don't have an account? Contact Admin
             </Button>
           </CardActions>
         </div>
 
-        {/* Right side - Branding / Face step */}
-        <div className="hidden md:flex w-full md:w-1/2 bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400 text-white items-center justify-center p-10">
+        {/* Right side - Branding */}
+        <div
+          className="md:flex w-full md:w-1/2 text-white items-center justify-center p-10 bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400"
+        // style={{ 
+        //   background: 'linear-gradient(135deg, #0066A6 0%, #00A3E1 50%, #00BFFF 100%)'
+        // }}
+        >
           {showFaceLogin && loggedUser?.role === 'EMPLOYEE' ? (
             <FaceLogin
               user={loggedUser}
+              loggedUser={loggedUser}
               onSuccess={() => {
                 localStorage.setItem('user', JSON.stringify({ id: loggedUser.id, role: loggedUser.role }));
                 localStorage.setItem('token', loggedUser.jwt);
@@ -209,3 +278,9 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
+
