@@ -81,13 +81,14 @@ const Navbar = () => {
   const guestLinks = [
     { name: 'Home', path: '/home' },
     { name: 'AboutUs', path: '/aboutus' },
-    { name: 'Auto Attendance', path: '/autoattendance' },
+    { name: 'Attendance', path: '/autoattendance' },
     { name: 'ContactUs', path: '/contactus' },
     { name: 'Login', path: '/loginpage' },
   ];
 
   const adminLinks = [
-    { name: 'Dashboard', path: '/admindashboard' },
+     { name: 'Dashboard', path: '/dashboardadm' },
+    { name: 'Tasks', path: '/admindashboard' },
     { name: 'Apps', path: '/app' },
     { name: 'Assign Task', path: '/posttask' },
     { name: 'HRMS', path: '/hrmsadmin' },
@@ -96,7 +97,8 @@ const Navbar = () => {
   ];
 
   const employeeLinks = [
-    { name: 'Dashboard', path: '/employeedashboard' },
+     { name: 'Dashboard', path: '/dashboardemp' },
+    { name: 'Tasks', path: '/employeedashboard' },
     { name: 'Apps', path: '/employeeapps' },
     { name: 'HRMS', path: '/hrmsemployee' },
     { name: 'Inventory Management', path: '/inventoryemployee' }
@@ -204,96 +206,6 @@ const Navbar = () => {
       )}
     </header>
 
-
-    // <header className="fixed top-0 left-0 w-full z-50 shadow-md bg-white text-black f">
-    //   <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-    //     <motion.div
-    //       initial={{ opacity: 0, x: -50 }}
-    //       animate={{ opacity: 1, x: 0 }}
-    //       transition={{ duration: 0.5 }}
-    //       className="flex-shrink-0"
-    //     >
-    //       <Link to="/">
-    //         <img
-    //           src={logo}
-    //           alt="Logo"
-    //           className="h-10 w-auto rounded-lg shadow-md"
-    //           style={{ borderRadius: '12px' }}
-    //         />
-    //       </Link>
-    //     </motion.div>
-
-    //     {/* Desktop Nav */}
-    //     <nav className="hidden md:flex items-center space-x-1 lg:space-x-6">
-    //       {renderLinks().map((link) => (
-    //         <Link
-    //           key={link.name}
-    //           to={link.path}
-    //           className="px-3 py-2 text-sm lg:text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-300"
-    //         >
-    //           {link.name}
-    //         </Link>
-    //       ))}
-    //       {(isAdminLoggedIn || isEmployeeLoggedIn) && (
-    //         <button
-    //           onClick={logout}
-    //           className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-full text-sm lg:text-base shadow hover:bg-blue-700 transition-all duration-300"
-    //         >
-    //           Logout
-    //         </button>
-    //       )}
-    //     </nav>
-
-    //     {/* Mobile Menu Button */}
-    //     <div className="md:hidden flex items-center">
-    //       <button
-    //         onClick={() => setIsOpen(!isOpen)}
-    //         className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
-    //       >
-    //         {isOpen ? (
-    //           <X size={24} className="text-gray-700" />
-    //         ) : (
-    //           <Menu size={24} className="text-gray-700" />
-    //         )}
-    //       </button>
-    //     </div>
-    //   </div>
-
-    //   {/* Mobile Nav */}
-    //   {isOpen && (
-    //     <motion.div
-    //       initial={{ opacity: 0, y: -20 }}
-    //       animate={{ opacity: 1, y: 0 }}
-    //       exit={{ opacity: 0, y: -20 }}
-    //       transition={{ duration: 0.2 }}
-    //       className="md:hidden bg-white shadow-lg"
-    //     >
-    //       <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-    //         {renderLinks().map((link) => (
-    //           <Link
-    //             key={link.name}
-    //             to={link.path}
-    //             className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-    //             onClick={() => setIsOpen(false)}
-    //           >
-    //             {link.name}
-    //           </Link>
-    //         ))}
-    //         {(isAdminLoggedIn || isEmployeeLoggedIn) && (
-    //           <button
-    //             onClick={() => {
-    //               logout();
-    //               setIsOpen(false);
-    //             }}
-    //             className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
-    //           >
-    //             Logout
-    //           </button>
-    //         )}
-    //       </div>
-    //     </motion.div>
-    //   )}
-    // </header>
   );
 };
 

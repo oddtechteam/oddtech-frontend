@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -26,11 +25,45 @@ const VisitorForm = () => {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraStream, setCameraStream] = useState(null);
 
+  // Get API base URL from environment variables
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
-    const records = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
-    setVisitorRecords(records);
-  }, []);
+    fetchVisitorRecords();
+    
+    // Animation on component mount
+    setTimeout(() => {
+      setFormElementsVisible(true);
+    }, 100);
+
+    // Cleanup camera stream on unmount
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [cameraStream]);
+
+  // Fetch visitor records from API
+  const fetchVisitorRecords = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/visitors`);
+      if (response.ok) {
+        const data = await response.json();
+        setVisitorRecords(data);
+      } else {
+        console.error('Failed to fetch visitor records');
+        // Fallback to localStorage if API fails
+        const records = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
+        setVisitorRecords(records);
+      }
+    } catch (error) {
+      console.error('Error fetching visitor records:', error);
+      // Fallback to localStorage if API fails
+      const records = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
+      setVisitorRecords(records);
+    }
+  };
 
   // Format date function
   const formatDate = (dateString) => {
@@ -50,21 +83,6 @@ const VisitorForm = () => {
         return <span className="px-2 py-1 text-xs font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">Pending</span>;
     }
   };
-
-
-  // Animation on component mount
-  useEffect(() => {
-    setTimeout(() => {
-      setFormElementsVisible(true);
-    }, 100);
-
-    // Cleanup camera stream on unmount
-    return () => {
-      if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [cameraStream]);
 
   const startCamera = async () => {
     try {
@@ -164,7 +182,7 @@ const VisitorForm = () => {
     fileInputRef.current.click();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -180,9 +198,62 @@ const VisitorForm = () => {
       return;
     }
 
-    // Simulate API call delay
-    setTimeout(() => {
-      // Save to localStorage for demo purposes
+    try {
+      // Create FormData object to handle file upload
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      submitData.append('vehicle', formData.vehicle);
+      submitData.append('assets', formData.assets);
+      submitData.append('reason', formData.reason);
+      submitData.append('entryTime', formData.entryTime);
+      submitData.append('exitTime', formData.exitTime);
+      
+      if (formData.photo) {
+        submitData.append('photo', formData.photo);
+      }
+
+      // Send data to API
+      const response = await fetch(`${API_BASE_URL}/api/visitors`, {
+        method: 'POST',
+        body: submitData,
+      });
+
+      if (response.ok) {
+        const newVisitor = await response.json();
+        
+        // Update local state
+        setVisitorRecords(prev => [newVisitor, ...prev]);
+        
+        // Show success message
+        Swal.fire({
+          title: 'Request Submitted!',
+          text: 'Your entry request has been sent for approval.',
+          icon: 'success',
+          confirmButtonColor: '#4f46e5',
+          timer: 3000,
+          timerProgressBar: true,
+          willClose: () => {
+            // Reset form
+            setFormData({
+              name: '',
+              vehicle: '',
+              assets: '',
+              reason: '',
+              entryTime: '',
+              exitTime: '',
+              photo: null,
+              photoPreview: null
+            });
+            setIsSubmitting(false);
+          }
+        });
+      } else {
+        throw new Error('Failed to submit visitor request');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Fallback to localStorage if API fails
       const requests = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
       const newRequest = {
         ...formData,
@@ -191,11 +262,11 @@ const VisitorForm = () => {
         timestamp: new Date().toISOString()
       };
       localStorage.setItem('visitorRequests', JSON.stringify([...requests, newRequest]));
-
-      // Show success message with SweetAlert
+      setVisitorRecords(prev => [newRequest, ...prev]);
+      
       Swal.fire({
-        title: 'Request Submitted!',
-        text: 'Your entry request has been sent for approval.',
+        title: 'Request Submitted (Offline)',
+        text: 'Your entry request has been saved locally and will be synced when online.',
         icon: 'success',
         confirmButtonColor: '#4f46e5',
         timer: 3000,
@@ -215,13 +286,12 @@ const VisitorForm = () => {
           setIsSubmitting(false);
         }
       });
-    }, 1500);
+    }
   };
 
   // Animation classes
   const inputAnimation = "transition-all duration-500 ease-out";
   const fadeInClass = formElementsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4";
-
   return (
     <div>
       <Navbar />
@@ -244,9 +314,9 @@ const VisitorForm = () => {
           <div className={`bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 hover:shadow-2xl ${fadeInClass}`}>
             <div className="px-6 py-8 sm:p-10">
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-                  Visitor Entry Request
-                </h1>
+            <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-[#00A3E1] to-[#00AEEF]">
+  Visitor Entry Request
+</h1>
                 <p className="mt-3 text-lg text-gray-600 max-w-md mx-auto">
                   Please fill all details to request entry permission
                 </p>
@@ -522,9 +592,9 @@ const VisitorForm = () => {
                     type="submit"
                     disabled={isSubmitting}
                     className={`ml-3 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${isSubmitting
-                      ? 'bg-indigo-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
-                      } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-105 duration-300`}
+                      ? 'bg-[#00A3E1] cursor-not-allowed'
+                      : 'bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] hover:from-[#00A3E1] hover:to-[#00AEEF]'
+                      } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00A3E1] transform transition hover:scale-105 duration-300`}
                   >
                     {isSubmitting ? (
                       <>
@@ -543,6 +613,7 @@ const VisitorForm = () => {
                       </>
                     )}
                   </button>
+
                 </div>
               </form>
             </div>
@@ -553,9 +624,10 @@ const VisitorForm = () => {
 
         <div className="mt-12 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Recent Visitor Records
-            </h2>
+        <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] bg-clip-text text-transparent">
+  Recent Visitor Records
+</h2>
+
 
           </div>
 

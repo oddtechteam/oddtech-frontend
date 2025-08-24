@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
 function DocumentManagementApp() {
-  const API_BASE_URL = "http://localhost:8080/api/documents";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/api/documents";
   const navigate = useNavigate();
 
   // State management
@@ -56,7 +55,7 @@ function DocumentManagementApp() {
     };
 
     fetchDocuments();
-  }, [filter, searchQuery]);
+  }, [filter, searchQuery, API_BASE_URL]);
 
   // Event handlers
   const handleInputChange = (e) => {
@@ -137,7 +136,8 @@ function DocumentManagementApp() {
 
   const handleDownload = () => {
     if (viewDocument) {
-      window.open(`http://localhost:8080/uploads/${viewDocument.filePath}`, '_blank');
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      window.open(`${baseUrl}/uploads/${viewDocument.filePath}`, '_blank');
     }
   };
 
@@ -183,13 +183,6 @@ function DocumentManagementApp() {
       {/* Integrated Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          {/* <button 
-            onClick={() => navigate('/admindashboard')}
-            className="flex items-center text-blue-600 hover:text-blue-800 transition"
-          >
-            <i className="fas fa-arrow-left mr-2"></i> Go Back
-          </button>
-           */}
           <div className="flex-1 max-w-xl mx-4">
             <div className="relative">
               <input
@@ -267,7 +260,7 @@ function DocumentManagementApp() {
                 <h3 className="text-lg font-medium mb-2">Drag & Drop to Upload</h3>
                 <p className="text-gray-500 mb-6">Supported formats: PDF, DOC, DOCX, XLS, JPG, PNG</p>
                 <button
-                  className="bg-blue-600 text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 mx-auto hover:bg-blue-700 transition"
+                  className="bg-[#00A3E1] text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 mx-auto hover:bg-[#00AEEF] transition"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsModalOpen(true);
@@ -317,7 +310,7 @@ function DocumentManagementApp() {
                   Try changing your filters or upload a new document
                 </p>
                 <button
-                  className="bg-blue-600 text-white py-2 px-6 rounded-full font-medium hover:bg-blue-700 transition"
+                  className="bg-[#00A3E1] text-white py-2 px-6 rounded-full font-medium hover:bg-[#00AEEF] transition"
                   onClick={() => setIsModalOpen(true)}
                 >
                   Add Your First Document

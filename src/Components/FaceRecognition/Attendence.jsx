@@ -1,34 +1,3 @@
-// import React, { useRef, useState } from "react";
-// import Webcam from "react-webcam";
-// import axios from "axios";
-
-// const AttendanceCapture = ({ employeeId }) => {
-//     const webcamRef = useRef(null);
-//     const [status, setStatus] = useState("");
-
-//     const captureAndSend = async () => {
-//         const imageSrc = webcamRef.current.getScreenshot();
-//         const response = await axios.post("http://localhost:8080/api/attendance/mark", {
-//             employeeId,
-//             image: imageSrc
-//         });
-//         setStatus(response.data.message);
-//     };
-
-//     return (
-//         <div>
-//             <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
-//             <button onClick={captureAndSend} className="mt-2 p-2 bg-blue-500 text-white rounded">Mark Attendance</button>
-//             <p>{status}</p>
-//         </div>
-//     );
-// };
-
-// export default AttendanceCapture;
-
-
-
-
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -43,13 +12,15 @@ const Attendance = () => {
     const [logModal, setLogModal] = useState({ open: false, logs: [], name: "" });
     const [photoModal, setPhotoModal] = useState({ open: false, url: "" });
 
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     useEffect(() => {
         fetchAttendance();
     }, [selectedDate]);
 
     const fetchAttendance = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/auth/attendance");
+            const res = await fetch(`${API_BASE_URL}/api/auth/attendance`);
             if (!res.ok) throw new Error("Failed to fetch attendance");
 
             const allData = await res.json();

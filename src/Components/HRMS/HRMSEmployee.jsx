@@ -1,23 +1,25 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import format from 'date-fns/format';
 import SocialMedia from './SocialMediaEmployee.jsx';
+import AnalyticsDashboard from '../Employee/DashboardEmp.jsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Dialog, Transition } from "@headlessui/react";
 import { Clock4, X } from "lucide-react";
-import { Fragment } from "react";
-
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const HRMSEmployee = () => {
+    const navigate = useNavigate();
     const [activeSection, setActiveSection] = useState('dashboard');
+    const [showAnalytics, setShowAnalytics] = useState(false);
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const [user, setUser] = useState(storedUser || null);
-
     const [leaveApplications, setLeaveApplications] = useState([]);
     const [attendanceRecords, setAttendanceRecords] = useState([]);
     const [leaveBalance, setLeaveBalance] = useState(null);
+    const [attendanceSummary, setAttendanceSummary] = useState(null);
     const [newLeave, setNewLeave] = useState({
         type: 'Annual',
         startDate: '',
@@ -25,75 +27,100 @@ const HRMSEmployee = () => {
         reason: ''
     });
 
-    const fetchLeaveBalance = () => {
+    // Get API base URL from environment variables
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    const fetchLeaveBalance = async () => {
         const token = localStorage.getItem("token");
 
-        fetch(`http://localhost:8080/api/employee/leave-balance/${user.id}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        })
-            .then(async res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                setLeaveBalance(data);
-            })
-            .catch(err => {
-                console.error("Failed to fetch leave balance:", err);
+        if (!user || !user.id) return;
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/employee/leave-balance/${user.id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
             });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+            }
+
+            const data = await res.json();
+            setLeaveBalance(data);
+        } catch (err) {
+            console.error("Failed to fetch leave balance:", err);
+        }
     };
 
+    const fetchAttendanceSummary = async () => {
+        const token = localStorage.getItem("token");
+        if (!user || !user.id) return;
 
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/employee/attendance-summary/${user.id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
-    useEffect(() => {
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+            }
+
+            const data = await res.json();
+            setAttendanceSummary(data);
+        } catch (err) {
+            console.error("Failed to fetch attendance summary:", err);
+        }
+    };
+
+    const fetchLeaveApplications = async () => {
         if (!user || !user.id) return;
 
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/api/employee/leave/user/${user.id}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        })
-            .then(async res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                console.log("Raw leave data from backend:", data);
-                const formatted = data.map(item => ({
-                    id: item.leaveId,
-                    userId: item.userId,
-                    employee: user.name,
-                    type: item.leaveType,
-                    startDate: item.startDate,
-                    endDate: item.endDate,
-                    reason: item.reason,
-                    status: item.leaveStatus
-                }));
-
-                setLeaveApplications(formatted);
-            })
-            .catch(err => {
-                console.error("Failed to load leave data:", err);
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/employee/leave/user/${user.id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
             });
 
-        fetchLeaveBalance();
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+            }
 
+            const data = await res.json();
+            const formatted = data.map(item => ({
+                id: item.leaveId,
+                userId: item.userId,
+                employee: user.name,
+                type: item.leaveType,
+                startDate: item.startDate,
+                endDate: item.endDate,
+                reason: item.reason,
+                status: item.leaveStatus
+            }));
+
+            setLeaveApplications(formatted);
+        } catch (err) {
+            console.error("Failed to load leave data:", err);
+        }
+    };
+
+    useEffect(() => {
+        if (user && user.id) {
+            fetchLeaveBalance();
+            fetchLeaveApplications();
+            fetchAttendanceSummary();
+        }
     }, [user]);
 
-
-
-
-
-
-
-    // Animation variants
     const sectionVariants = {
         hidden: { opacity: 0, x: -50 },
         visible: {
@@ -115,18 +142,18 @@ const HRMSEmployee = () => {
 
         const payload = {
             userId: user.id,
-            leaveType: newLeave.type.toUpperCase(), // match enum in backend
+            leaveType: newLeave.type.toUpperCase(),
             startDate: newLeave.startDate,
             endDate: newLeave.endDate,
             reason: newLeave.reason
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/employee/leave/createleave", {
+            const response = await fetch(`${API_BASE_URL}/api/employee/leave/createleave`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
-                    , "Authorization": `Bearer ${token}`
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(payload)
             });
@@ -151,66 +178,69 @@ const HRMSEmployee = () => {
                     reason: ''
                 });
 
-                alert("Leave submitted successfully!");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Leave Submitted',
+                    text: 'Your leave request was submitted successfully.'
+                });
+                
+                // Refresh leave balance
+                fetchLeaveBalance();
             } else {
-                alert("Failed to submit leave: " + response.status);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission Failed',
+                    text: `Server responded with status ${response.status}`
+                });
             }
         } catch (error) {
             console.error("Error submitting leave:", error);
-            alert("Error submitting leave. See console for details.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred while submitting leave.'
+            });
         }
     };
-
 
     const markAttendance = (status) => {
         const today = new Date().toISOString().split('T')[0];
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Check if attendance already marked for today
         const todayRecord = attendanceRecords.find(record =>
             record.date === today && record.employeeId === user.id
         );
 
         if (todayRecord) {
-            alert('Attendance already marked for today!');
+            Swal.fire({
+                icon: 'info',
+                title: 'Already Marked',
+                text: 'Attendance is already marked for today.'
+            });
             return;
         }
 
-        if (status === 'Present' || status === 'Late') {
-            const newRecord = {
-                id: attendanceRecords.length + 1,
-                employeeId: user.id,
-                employee: user.name,
-                date: today,
-                status: status,
-                checkIn: time,
-                checkOut: '-'
-            };
-            setAttendanceRecords([...attendanceRecords, newRecord]);
-        } else {
-            const newRecord = {
-                id: attendanceRecords.length + 1,
-                employeeId: user.id,
-                employee: user.name,
-                date: today,
-                status: status,
-                checkIn: '-',
-                checkOut: '-'
-            };
-            setAttendanceRecords([...attendanceRecords, newRecord]);
-        }
+        const newRecord = {
+            id: attendanceRecords.length + 1,
+            employeeId: user.id,
+            employee: user.name,
+            date: today,
+            status,
+            checkIn: (status === 'Present' || status === 'Late') ? time : '-',
+            checkOut: '-'
+        };
+        setAttendanceRecords([...attendanceRecords, newRecord]);
 
-        alert(`Attendance marked as ${status}`);
+        Swal.fire({
+            icon: 'success',
+            title: 'Attendance Marked',
+            text: `Marked as ${status}`
+        });
     };
 
     const getMyLeaveApplications = () => {
         return leaveApplications.filter(app => app.userId === user?.id);
     };
-
-    const recentLeaves = [...leaveApplications]
-        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-        .slice(0, 5); // Get latest 5
-
 
     const getMyAttendanceRecords = () => {
         return attendanceRecords.filter(record => record.employee === user?.name);
@@ -225,18 +255,16 @@ const HRMSEmployee = () => {
 
         const fetchAttendance = async () => {
             try {
-                const res = await fetch("http://localhost:8080/api/auth/attendance");
+                const res = await fetch(`${API_BASE_URL}/api/auth/attendance`);
                 if (!res.ok) throw new Error("Failed to fetch attendance");
 
                 const allData = await res.json();
-
-                // Filter by current user's email/username
                 const userData = localStorage.getItem("username");
 
                 const filtered = allData.filter((entry) => {
                     const entryDate = new Date(entry.time);
                     return entryDate.toDateString() === selectedDate.toDateString() &&
-                        entry.name === userData; // or entry.name === userData.name
+                        entry.name === userData;
                 });
 
                 const logsMap = {};
@@ -260,13 +288,18 @@ const HRMSEmployee = () => {
                 setAllLogs(logsMap);
             } catch (err) {
                 console.error(err.message);
-                alert("Error fetching attendance data");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Fetch Failed',
+                    text: 'Could not fetch attendance data.'
+                });
             }
         };
 
         useEffect(() => {
             fetchAttendance();
         }, [selectedDate]);
+
         return (
             <motion.section
                 key="attendance"
@@ -453,17 +486,18 @@ const HRMSEmployee = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 mt-15">
-
-
-            {/* Main Content */}
             <main className="container mx-auto px-4 py-6">
                 {/* Navigation */}
-                <nav className="mb-8 bg-white rounded-lg shadow p-2">
-                    <ul className="flex space-x-2">
+                <nav className="mb-8 bg-white rounded-lg shadow p-2 overflow-x-auto">
+                    <ul className="flex flex-wrap sm:flex-nowrap space-x-2 min-w-max">
                         <li>
                             <button
                                 onClick={() => setActiveSection('dashboard')}
-                                className={`px-4 py-2 rounded-md ${activeSection === 'dashboard' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                                className={`px-4 py-2 rounded-md whitespace-nowrap ${
+                                    activeSection === 'dashboard'
+                                        ? 'bg-blue-100 text-blue-600 font-medium'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                }`}
                             >
                                 Dashboard
                             </button>
@@ -471,7 +505,11 @@ const HRMSEmployee = () => {
                         <li>
                             <button
                                 onClick={() => setActiveSection('leave')}
-                                className={`px-4 py-2 rounded-md ${activeSection === 'leave' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                                className={`px-4 py-2 rounded-md whitespace-nowrap ${
+                                    activeSection === 'leave'
+                                        ? 'bg-blue-100 text-blue-600 font-medium'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                }`}
                             >
                                 Leave Management
                             </button>
@@ -479,44 +517,51 @@ const HRMSEmployee = () => {
                         <li>
                             <button
                                 onClick={() => setActiveSection('attendance')}
-                                className={`px-4 py-2 rounded-md ${activeSection === 'attendance' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                                className={`px-4 py-2 rounded-md whitespace-nowrap ${
+                                    activeSection === 'attendance'
+                                        ? 'bg-blue-100 text-blue-600 font-medium'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                }`}
                             >
                                 Attendance
                             </button>
                         </li>
                         <li>
                             <button
-                                onClick={() => setActiveSection('profile')}
-                                className={`px-4 py-2 rounded-md ${activeSection === 'profile' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
-                            >
-                                My Profile
-                            </button>
-                        </li>
-
-
-                        <li>
-                            <button
                                 onClick={() => setActiveSection('socialmediaemployee')}
-                                className={`px-4 py-2 rounded-md ${activeSection === 'socialmediaemployee' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                                className={`px-4 py-2 rounded-md whitespace-nowrap ${
+                                    activeSection === 'socialmediaemployee'
+                                        ? 'bg-blue-100 text-blue-600 font-medium'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                }`}
                             >
                                 Social Media
                             </button>
                         </li>
+                        {/* <li>
+                            <button
+                                onClick={() => setShowAnalytics(true}
+                                className="px-4 py-2 rounded-md whitespace-nowrap bg-blue-600 text-white font-medium hover:bg-blue-700"
+                            >
+                                Analytics Dashboard
+                            </button>
+                        </li> */}
                     </ul>
                 </nav>
 
                 {/* Content Sections */}
                 <AnimatePresence mode="wait">
+                    {/* Analytics Dashboard */}
+                    {showAnalytics && (
+                        <AnalyticsDashboard 
+                            leaveBalance={leaveBalance}
+                            attendanceSummary={attendanceSummary}
+                            onClose={() => setShowAnalytics(false)}
+                        />
+                    )}
 
-
-
-
-
-
-
-
-
-                    {activeSection === 'socialmediaemployee' && (
+                    {/* Social Media Section */}
+                    {activeSection === 'socialmediaemployee' && !showAnalytics && (
                         <motion.section
                             key="socialmediaemployee"
                             initial="hidden"
@@ -528,8 +573,9 @@ const HRMSEmployee = () => {
                             <SocialMedia />
                         </motion.section>
                     )}
+                    
                     {/* Dashboard Section */}
-                    {activeSection === 'dashboard' && (
+                    {activeSection === 'dashboard' && !showAnalytics && (
                         <motion.section
                             key="dashboard"
                             initial="hidden"
@@ -565,11 +611,10 @@ const HRMSEmployee = () => {
                                             <span className="font-semibold">{leaveBalance?.earnedLeave ?? 0} days</span>
                                         </p>
                                     </div>
-
                                 </motion.div>
 
                                 {/* Attendance Summary Card */}
-                                <motion.div
+                                {/* <motion.div
                                     className="bg-green-50 rounded-lg p-4 border border-green-100"
                                     whileHover={{ y: -5 }}
                                 >
@@ -588,7 +633,7 @@ const HRMSEmployee = () => {
                                             <span className="font-semibold">4 days</span>
                                         </p>
                                     </div>
-                                </motion.div>
+                                </motion.div> */}
 
                                 {/* Quick Actions Card */}
                                 <motion.div
@@ -614,11 +659,13 @@ const HRMSEmployee = () => {
                             </div>
 
                             {/* Recent Leave Applications */}
-
                             <div className="mb-8">
-                                <h3 className="font-bold text-gray-700 mb-3">My Recent Leave Applications</h3>
-                                <div className=" rounded-lg overflow-hidden border border-gray-200">
-                                    <table className="min-w-full divide-y divide-gray-200">
+                                <h3 className="font-bold text-gray-700 mb-3 text-base md:text-lg">
+                                    My Recent Leave Applications
+                                </h3>
+
+                                <div className="rounded-lg border border-gray-200 overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-gray-200 text-sm">
                                         <thead className="bg-gray-100">
                                             <tr>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
@@ -633,15 +680,15 @@ const HRMSEmployee = () => {
                                                 .slice(0, 3)
                                             ).map((app) => (
                                                 <tr key={app.id} className="hover:bg-gray-50 transition-colors duration-150">
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{app.type}</td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td className="px-4 py-4 whitespace-nowrap text-gray-700">{app.type}</td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-gray-700">
                                                         {new Date(app.startDate).toLocaleDateString()} to{" "}
                                                         {new Date(app.endDate).toLocaleDateString()}
                                                     </td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 hover:text-clip" title={app.reason || "-"}>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-gray-700" title={app.reason || "-"}>
                                                         {app.reason || "-"}
                                                     </td>
-                                                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td className="px-4 py-4 whitespace-nowrap text-gray-700">
                                                         <span
                                                             className={`px-2 py-1 text-xs rounded-full font-medium ${app.status === "APPROVED"
                                                                 ? "bg-green-100 text-green-800"
@@ -658,7 +705,7 @@ const HRMSEmployee = () => {
 
                                             {getMyLeaveApplications().length === 0 && (
                                                 <tr className="hover:bg-gray-50 transition-colors duration-150">
-                                                    <td colSpan={4} className="px-4 py-4 text-center text-sm text-gray-500">
+                                                    <td colSpan={4} className="px-4 py-4 text-center text-gray-500">
                                                         You haven't applied for any leaves yet
                                                     </td>
                                                 </tr>
@@ -669,10 +716,10 @@ const HRMSEmployee = () => {
                             </div>
 
                             {/* Recent Attendance Records */}
-                            <div>
+                            {/* <div>
                                 <h3 className="font-bold text-gray-700 mb-3">Recent Attendance</h3>
-                                <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
-                                    <table className="min-w-full divide-y divide-gray-200">
+                                <div className="bg-gray-50 rounded-lg overflow-x-auto border border-gray-200">
+                                    <table className="min-w-[700px] divide-y divide-gray-200">
                                         <thead className="bg-gray-100">
                                             <tr>
                                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
@@ -693,10 +740,11 @@ const HRMSEmployee = () => {
                                                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.date}</td>
                                                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{day}</td>
                                                         <td className="px-4 py-3 whitespace-nowrap">
-                                                            <span className={`px-2 py-1 text-xs rounded-full ${record.status === 'Present' ? 'bg-green-100 text-green-800' :
+                                                            <span className={`px-2 py-1 text-xs rounded-full ${
+                                                                record.status === 'Present' ? 'bg-green-100 text-green-800' :
                                                                 record.status === 'Late' ? 'bg-yellow-100 text-yellow-800' :
-                                                                    'bg-red-100 text-red-800'
-                                                                }`}>
+                                                                'bg-red-100 text-red-800'
+                                                            }`}>
                                                                 {record.status}
                                                             </span>
                                                         </td>
@@ -718,12 +766,12 @@ const HRMSEmployee = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> */}
                         </motion.section>
                     )}
 
                     {/* Leave Management Section */}
-                    {activeSection === 'leave' && (
+                    {activeSection === 'leave' && !showAnalytics && (
                         <motion.section
                             key="leave"
                             initial="hidden"
@@ -788,10 +836,10 @@ const HRMSEmployee = () => {
                                                     required
                                                 ></textarea>
                                             </div>
-
                                             <button
                                                 type="submit"
-                                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition font-medium"
+                                                style={{ backgroundColor: '#00A3E1' }}
+                                                className="w-full text-white py-2 px-4 rounded-md hover:brightness-110 transition font-medium"
                                             >
                                                 Submit Application
                                             </button>
@@ -820,13 +868,7 @@ const HRMSEmployee = () => {
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
-
-
-
-
                                 <div className="lg:col-span-2">
                                     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                                         <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
@@ -885,76 +927,19 @@ const HRMSEmployee = () => {
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         </motion.section>
                     )}
 
                     {/* Attendance Section */}
-                    {activeSection === 'attendance' && <AttendanceSection />}
-
-
-                    {/* Profile Section */}
-                    {activeSection === 'profile' && (
-                        <motion.section
-                            key="profile"
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={sectionVariants}
-                            className="bg-white rounded-lg shadow p-6"
-                        >
-                            <h2 className="text-xl font-bold mb-6 text-gray-800">My Profile</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4 text-gray-700">Personal Information</h3>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <p className="text-sm text-gray-500">Full Name</p>
-                                            <p className="font-medium">{user.name}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Email</p>
-                                            <p className="font-medium">{user.email}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Department</p>
-                                            <p className="font-medium">{user.department}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Join Date</p>
-                                            <p className="font-medium">{user.joinDate}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4 text-gray-700">Leave Balance</h3>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <p className="text-sm text-gray-500">Annual Leave</p>
-                                            <p className="font-medium">{user.remainingLeaves.annual} days remaining</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Sick Leave</p>
-                                            <p className="font-medium">{user.remainingLeaves.sick} days remaining</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Casual Leave</p>
-                                            <p className="font-medium">{user.remainingLeaves.casual} days remaining</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.section>
-                    )}
+                    {activeSection === 'attendance' && !showAnalytics && <AttendanceSection />}
                 </AnimatePresence>
             </main>
-
-
         </div>
     );
 };
 
 export default HRMSEmployee;
+
+
+

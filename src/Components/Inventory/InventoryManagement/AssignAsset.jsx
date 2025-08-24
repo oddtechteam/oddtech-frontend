@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -26,26 +26,8 @@ const AssignAssets = () => {
   const [activeRequest, setActiveRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [returningAssets, setReturningAssets] = useState({});
-  // useEffect(() => {
-  //   console.log('Active assignments updated:', activeAssignments);
-  // }, [activeAssignments]);
-  //
-  // useEffect(() => {
-  //   console.log('Assets with assignments:', assets.filter(a =>
-  //     a.assignments?.some(ass => ass.status === 'ACTIVE')));
-  // }, [assets]);
-  useEffect(() => {
-    console.log('Requests data:', requests); // Inspect the full response
-  }, [requests]);
-  useEffect(() => {
-    console.log('Full requests data:', requests);
-    if (requests.length > 0) {
-      console.log('First request structure:', requests[0]);
-    }
-  }, [requests]);
 
   useEffect(() => {
-    // Update the fetchData function
     const fetchData = async () => {
       try {
         const [employeesRes, assetsRes, requestsRes, activeAssignmentsRes] = await Promise.all([
@@ -53,7 +35,6 @@ const AssignAssets = () => {
           api.get('/assets'),
           api.get('/assignments/requests/pending'),
           api.get('/assignments/active-with-details')
-
         ]);
 
         setEmployees(employeesRes.data || []);
@@ -85,10 +66,6 @@ const AssignAssets = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log('Current assets data:', assets);
-  }, [assets]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAssignment({ ...assignment, [name]: value });
@@ -118,7 +95,6 @@ const AssignAssets = () => {
       ]);
       setAssets(assetsRes.data);
       setRequests(requestsRes.data);
-      console.log('Processed requests:', requestsRes.data);
       setActiveAssignments(activeAssignmentsRes.data);
 
       // Reset form
@@ -463,86 +439,6 @@ const AssignAssets = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
-        {/*         <motion.div */}
-        {/*           className="bg-white rounded-xl shadow-lg p-6" */}
-        {/*           whileHover={{ y: -5 }} */}
-        {/*           transition={{ duration: 0.3 }} */}
-        {/*         > */}
-        {/*           <h3 className="text-lg font-semibold text-gray-800 mb-4">Direct Asset Assignment</h3> */}
-
-        {/*           <form onSubmit={handleSubmit}> */}
-        {/*             <div className="mb-4"> */}
-        {/*               <label className="block text-sm font-medium text-gray-700 mb-1">Select Employee</label> */}
-        {/*               <select */}
-        {/*                 name="employeeId" */}
-        {/*                 value={assignment.employeeId} */}
-        {/*                 onChange={handleChange} */}
-        {/*                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" */}
-        {/*                 required */}
-        {/*               > */}
-        {/*                 <option value="">Select an employee</option> */}
-        {/*                 {employees.map(employee => ( */}
-        {/*                   <option key={employee.id} value={employee.id}> */}
-        {/*                     {employee.name} ({employee.department}) */}
-        {/*                   </option> */}
-        {/*                 ))} */}
-        {/*               </select> */}
-        {/*             </div> */}
-
-        {/*             <div className="mb-4"> */}
-        {/*               <label className="block text-sm font-medium text-gray-700 mb-1">Select Available Asset</label> */}
-        {/*               <select */}
-        {/*                 name="assetId" */}
-        {/*                 value={assignment.assetId} */}
-        {/*                 onChange={handleChange} */}
-        {/*                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" */}
-        {/*                 required */}
-        {/*               > */}
-        {/*                 <option value="">Select an asset</option> */}
-        {/*                 {assets.filter(a => a.assetCondition === 'Available').map(asset => ( */}
-        {/*                   <option key={asset.id} value={asset.id}> */}
-        {/*                     {asset.name} ({asset.productId}) */}
-        {/*                   </option> */}
-        {/*                 ))} */}
-        {/*               </select> */}
-        {/*             </div> */}
-
-        {/*             <div className="mb-4"> */}
-        {/*               <label className="block text-sm font-medium text-gray-700 mb-1">Assignment Date</label> */}
-        {/*               <input */}
-        {/*                 type="date" */}
-        {/*                 name="date" */}
-        {/*                 value={assignment.date} */}
-        {/*                 onChange={handleChange} */}
-        {/*                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" */}
-        {/*                 required */}
-        {/*               /> */}
-        {/*             </div> */}
-
-        {/*             <div className="mb-6"> */}
-        {/*               <label className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label> */}
-        {/*               <textarea */}
-        {/*                 name="notes" */}
-        {/*                 value={assignment.notes} */}
-        {/*                 onChange={handleChange} */}
-        {/*                 rows="3" */}
-        {/*                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" */}
-        {/*                 placeholder="Any additional information..." */}
-        {/*               ></textarea> */}
-        {/*             </div> */}
-
-        {/*             <button */}
-        {/*               type="submit" */}
-        {/*               disabled={isSubmitting} */}
-        {/*               className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg transition-all duration-300 ${ */}
-        {/*                 isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]' */}
-        {/*               }`} */}
-        {/*             > */}
-        {/*               {isSubmitting ? 'Assigning...' : 'Assign Asset'} */}
-        {/*             </button> */}
-        {/*           </form> */}
-        {/*         </motion.div> */}
-
         {/* Pending Requests Section */}
         <motion.div
           className="bg-white rounded-xl shadow-lg p-6"

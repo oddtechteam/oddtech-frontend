@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FiRefreshCw } from 'react-icons/fi';
 
-axios.defaults.baseURL = "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const TrackAssignmentAssest = () => {
   const [filter, setFilter] = useState('all');
@@ -26,7 +26,7 @@ const TrackAssignmentAssest = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("/api/assets", getAuthHeader());
+      const response = await axios.get(`${API_BASE_URL}/api/assets`, getAuthHeader());
       setAssets(response.data);
     } catch (err) {
       console.error("Error fetching assets:", err);
@@ -47,7 +47,7 @@ const TrackAssignmentAssest = () => {
       category: asset.type || 'Uncategorized',
       status: asset.assetCondition || 'Available',
       assignedTo: asset.assignments?.find(a => a.status === 'ACTIVE')?.employee?.name || null,
-      lastUpdate: new Date().toISOString().split('T')[0] // Update with actual date from backend if available
+      lastUpdate: new Date().toISOString().split('T')[0]
     }));
   };
 
@@ -169,13 +169,6 @@ const TrackAssignmentAssest = () => {
                     Last updated: {asset.lastUpdate}
                   </div>
                 </div>
-
-                <button
-                  onClick={() => navigate(`/inventorymanagement/assets/${asset.id}`)}
-                  className="w-full mt-2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  View Details
-                </button>
               </div>
             </div>
           ))}

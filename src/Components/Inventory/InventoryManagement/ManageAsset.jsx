@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -29,19 +29,12 @@ const ManageAssets = () => {
   }, []);
 
   const getStatusBadge = (asset) => {
-    // Check if asset has any open issues
-    const hasOpenIssues = asset.issues?.some(
-      issue => issue.status === 'OPEN'
-    );
+    const hasOpenIssues = asset.issues?.some(issue => issue.status === 'OPEN');
+    const hasActiveAssignment = asset.assignments?.some(assignment => assignment.status === 'ACTIVE');
 
     if (hasOpenIssues) {
       return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Under Maintenance</span>;
     }
-
-    // Check if asset has active assignments
-    const hasActiveAssignment = asset.assignments?.some(
-      assignment => assignment.status === 'ACTIVE'
-    );
 
     if (hasActiveAssignment) {
       return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Assigned</span>;
@@ -64,7 +57,6 @@ const ManageAssets = () => {
     setError(null);
     try {
       const response = await api.get('/assets');
-       console.log('API Response:', response.data);
       setAssets(response.data || []);
     } catch (error) {
       console.error('Error fetching assets:', error);
@@ -75,15 +67,12 @@ const ManageAssets = () => {
     }
   };
 
-  // Auto-generate product ID when adding new asset
   useEffect(() => {
     if (isAdding && !editingId) {
-      // Find the highest product ID number
       const maxId = assets.reduce((max, asset) => {
         const num = parseInt(asset.productId?.replace('ASSET-', '') || 0);
         return num > max ? num : max;
       }, 0);
-
       const generatedId = `ASSET-${(maxId + 1).toString().padStart(3, '0')}`;
       setNewAsset(prev => ({ ...prev, productId: generatedId }));
     }
@@ -91,7 +80,7 @@ const ManageAssets = () => {
 
   const handleAddAsset = async () => {
     if (!newAsset.name || !newAsset.serialNumber) {
-      setError('Name, Serial Number, and Product ID are required');
+      setError('Name and Serial Number are required');
       return;
     }
 
@@ -101,7 +90,6 @@ const ManageAssets = () => {
       } else {
         await api.post('/assets', newAsset);
       }
-
       setNewAsset({
         productId: '',
         name: '',
@@ -118,30 +106,22 @@ const ManageAssets = () => {
     }
   };
 
-const handleDelete = async (id) => {
-  try {
-    const response = await api.delete(`/assets/${id}`);
-
-    // If successful (204 No Content), remove from local state
-    setAssets(assets.filter(asset => asset.id !== id));
-
-  } catch (error) {
-    console.error('Error deleting asset:', error);
-
-    // Handle 400 Bad Request specifically
-    if (error.response?.status === 400) {
-      setError(error.response.data?.message || 'Cannot delete asset: it has active assignments or requests');
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/assets/${id}`);
+      setAssets(assets.filter(asset => asset.id !== id));
+    } catch (error) {
+      console.error('Error deleting asset:', error);
+      if (error.response?.status === 400) {
+        setError(error.response.data?.message || 'Cannot delete asset: it has active assignments or requests');
+      } else if (error.response?.status === 404) {
+        setError('Asset not found');
+      } else {
+        setError('Failed to delete asset. Please try again.');
+      }
     }
-    // Handle 404 Not Found
-    else if (error.response?.status === 404) {
-      setError('Asset not found');
-    }
-    // Handle other errors
-    else {
-      setError('Failed to delete asset. Please try again.');
-    }
-  }
-}
+  };
+
   const handleEdit = (asset) => {
     setNewAsset({
       productId: asset.productId,
@@ -176,8 +156,21 @@ const handleDelete = async (id) => {
               });
             }
           }}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] text-white font-medium py-2 px-5 rounded-lg shadow-md shadow-[#00A3E1]/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#00A3E1]/60 active:scale-95"
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            {isAdding ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            )}
+          </svg>
           {isAdding ? 'Cancel' : 'Add New Asset'}
         </button>
       </div>
@@ -198,7 +191,6 @@ const handleDelete = async (id) => {
           <h3 className="text-lg font-semibold mb-4 text-indigo-800">
             {editingId ? 'Edit Asset' : 'Add New Asset'}
           </h3>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Product ID</label>
@@ -255,7 +247,6 @@ const handleDelete = async (id) => {
               </select>
             </div>
 
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
               <div className="w-full px-4 py-2 bg-gray-100 rounded-lg text-gray-700">
@@ -267,7 +258,7 @@ const handleDelete = async (id) => {
           <div className="mt-6">
             <button
               onClick={handleAddAsset}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] hover:from-[#0096D6] hover:to-[#009BD9] text-white py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
               disabled={!newAsset.name || !newAsset.serialNumber}
             >
               {editingId ? 'Update Asset' : 'Add Asset'}
@@ -291,7 +282,6 @@ const handleDelete = async (id) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {/* Filter to show only available assets */}
               {assets.map((asset) => (
                 <motion.tr
                   key={asset.id}
@@ -313,9 +303,7 @@ const handleDelete = async (id) => {
                     <div className="text-sm text-gray-500">{asset.type || '-'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      {getStatusBadge(asset)}
-                    </span>
+                    {getStatusBadge(asset)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {asset.assignments?.length > 0 && asset.assignments[0].employee
@@ -344,6 +332,6 @@ const handleDelete = async (id) => {
       </div>
     </motion.div>
   );
+};
 
-}
 export default ManageAssets;

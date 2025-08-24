@@ -4,8 +4,8 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-// Set axios base URL
-axios.defaults.baseURL = "http://localhost:8080";
+// Get base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const HandleAssetReturn = () => {
   const [pendingReturns, setPendingReturns] = useState([]);
@@ -31,7 +31,7 @@ const HandleAssetReturn = () => {
   const fetchPendingReturns = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/assignments/returns/pending", getAuthHeader());
+      const response = await axios.get(`${API_BASE_URL}/api/assignments/returns/pending`, getAuthHeader());
       console.log("API Response:", response.data);
       setPendingReturns(response.data);
     } catch (error) {
@@ -67,7 +67,7 @@ const HandleAssetReturn = () => {
     try {
       // Call backend API to process return
       await axios.put(
-        `/api/assignments/${selectedReturn.id}/return`,
+        `${API_BASE_URL}/api/assignments/${selectedReturn.id}/return`,
         { condition, notes },
         getAuthHeader()
       );
@@ -173,86 +173,86 @@ const HandleAssetReturn = () => {
           )}
         </motion.div>
 
-         <motion.div
-                  className="bg-white rounded-xl shadow-lg p-6"
-                  whileHover={{ y: -5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {selectedReturn ? (
-                    <>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Process Return</h3>
+        <motion.div
+          className="bg-white rounded-xl shadow-lg p-6"
+          whileHover={{ y: -5 }}
+          transition={{ duration: 0.3 }}
+        >
+          {selectedReturn ? (
+            <>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Process Return</h3>
 
-                      <div className="mb-6 border-b pb-4">
-                        <h4 className="text-md font-medium text-gray-900">{selectedReturn.employee?.name || 'Unknown Asset'}</h4>
-                        <p className="text-sm text-gray-600">{selectedReturn.asset?.serialNumber || 'No S/N'}</p>
-                        <p className="text-sm text-gray-500 mt-1">Returned by: {selectedReturn.employee?.name || 'Unknown Employee'}</p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Assigned on: {new Date(selectedReturn.assignmentDate).toLocaleDateString()}
-                        </p>
-                      </div>
+              <div className="mb-6 border-b pb-4">
+                <h4 className="text-md font-medium text-gray-900">{selectedReturn.asset?.name || 'Unknown Asset'}</h4>
+                <p className="text-sm text-gray-600">{selectedReturn.asset?.serialNumber || 'No S/N'}</p>
+                <p className="text-sm text-gray-500 mt-1">Returned by: {selectedReturn.employee?.name || 'Unknown Employee'}</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Assigned on: {new Date(selectedReturn.assignmentDate).toLocaleDateString()}
+                </p>
+              </div>
 
-                      <form onSubmit={handleProcessReturn}>
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Asset Condition</label>
-                          <select
-                            value={condition}
-                            onChange={(e) => setCondition(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            required
-                          >
-                            <option value="">Select condition</option>
-                            <option value="Good">Good - No issues</option>
-                            <option value="Minor Damage">Minor Damage - Cosmetic issues</option>
-                            <option value="Major Damage">Major Damage - Functional issues</option>
-                            <option value="Not Working">Not Working - Needs repair</option>
-                          </select>
-                        </div>
+              <form onSubmit={handleProcessReturn}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Asset Condition</label>
+                  <select
+                    value={condition}
+                    onChange={(e) => setCondition(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select condition</option>
+                    <option value="Good">Good - No issues</option>
+                    <option value="Minor Damage">Minor Damage - Cosmetic issues</option>
+                    <option value="Major Damage">Major Damage - Functional issues</option>
+                    <option value="Not Working">Not Working - Needs repair</option>
+                  </select>
+                </div>
 
-                        <div className="mb-6">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                          <textarea
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            rows="3"
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            placeholder="Add any details about the asset condition..."
-                          ></textarea>
-                        </div>
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows="3"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="Add any details about the asset condition..."
+                  ></textarea>
+                </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedReturn(null)}
-                            className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg transition-colors duration-300"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={`bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-all duration-300 ${
-                              isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'
-                            }`}
-                          >
-                            {isSubmitting ? 'Processing...' : 'Complete Return'}
-                          </button>
-                        </div>
-                      </form>
-                    </>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center h-full py-12 text-center">
-                      <div className="bg-indigo-100 p-4 rounded-full mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                        </svg>
-                      </div>
-                      <h3 className="text-xl font-medium text-gray-800 mb-2">Select an Asset to Return</h3>
-                      <p className="text-gray-600 max-w-md">
-                        Choose an asset from the pending returns list to process its return and update availability.
-                      </p>
-                    </div>
-                  )}
-                </motion.div>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedReturn(null)}
+                    className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg transition-colors duration-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-all duration-300 ${
+                      isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'
+                    }`}
+                  >
+                    {isSubmitting ? 'Processing...' : 'Complete Return'}
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full py-12 text-center">
+              <div className="bg-indigo-100 p-4 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-medium text-gray-800 mb-2">Select an Asset to Return</h3>
+              <p className="text-gray-600 max-w-md">
+                Choose an asset from the pending returns list to process its return and update availability.
+              </p>
+            </div>
+          )}
+        </motion.div>
       </div>
     </motion.div>
   );

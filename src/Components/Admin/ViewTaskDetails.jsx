@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// Use API base URL from .env
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + '/api';
 const TASK_API_URL = `${API_BASE_URL}/admin/task`;
 const COMMENT_API_URL = `${API_BASE_URL}/admin/task/comment`;
 
 const ViewTaskDetails = () => {
-    const { id } = useParams(); // Task ID from URL
+    const { id } = useParams();
     const taskId = id;
 
-    const postedBy = 1; // Get userId securely (must be set in login)
+    const postedBy = 1; // Replace with logged-in user ID
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -92,9 +93,10 @@ const ViewTaskDetails = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className='bg-gradient-to-tr from-blue-50 to-blue-100'>
+          <div className="container mx-auto px-4 py-8 max-w-4xl bg-white">
             {/* Task Details */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 mt-20">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 mt-10">
                 <div className="p-6">
                     <h2 className="text-2xl font-bold text-blue-600 mb-3">{taskData?.title}</h2>
                     <p className="text-gray-700 mb-4">{taskData?.description}</p>
@@ -118,117 +120,89 @@ const ViewTaskDetails = () => {
                         </div>
                         <div className="flex items-center">
                             <span className="text-gray-600 mr-2">Priority:</span>
-                            <span className="font-semibold">
-                                <span className={`px-2 py-1 rounded-full text-xs ${taskData?.priority === 'HIGH' ? 'bg-red-100 text-red-800' :
+                            <span className={`px-2 py-1 rounded-full text-xs ${taskData?.priority === 'HIGH' ? 'bg-red-100 text-red-800' :
                                     taskData?.priority === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
                                         'bg-green-100 text-green-800'}`}>
-                                    {taskData?.priority}
-                                </span>
+                                {taskData?.priority}
                             </span>
                         </div>
                         <div className="flex items-center">
                             <span className="text-gray-600 mr-2">Status:</span>
-                            <span className="font-semibold">
-                                <span className={`px-2 py-1 rounded-full text-xs ${taskData?.taskStatus === 'COMPLETED' ? 'bg-green-100 text-green-800' :
+                            <span className={`px-2 py-1 rounded-full text-xs ${taskData?.taskStatus === 'COMPLETED' ? 'bg-green-100 text-green-800' :
                                     taskData?.taskStatus === 'INPROGRESS' ? 'bg-blue-100 text-blue-800' :
                                         'bg-gray-100 text-gray-800'}`}>
-                                    {taskData?.taskStatus}
-                                </span>
+                                {taskData?.taskStatus}
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Comment Form */}
+            {/* Comment Form & List */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
                 <div className="p-6">
                     <h4 className="text-lg font-semibold mb-4">Publish your Comment</h4>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="mb-4">
-                            <label htmlFor="content" className="block text-gray-700 mb-2">Content</label>
-                            <textarea
-                                id="content"
-                                {...register('content', { required: 'Content is required' })}
-                                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.content ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                rows={4}
-                            ></textarea>
-                            {errors.content && (
-                                <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>
-                            )}
-                        </div>
-                        <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
-                            >
+                        <textarea
+                            {...register('content', { required: 'Content is required' })}
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.content ? 'border-red-500' : 'border-gray-300'}`}
+                            rows={4}
+                        ></textarea>
+                        {errors.content && <p className="mt-1 text-sm text-red-600">{errors.content.message}</p>}
+                        <div className="flex justify-end mt-2">
+                            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                                 Publish Comment
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
 
-            {/* Comments */}
-            <div>
-                <h4 className="text-lg font-semibold mb-4">Comments ({comments.length})</h4>
-                {comments.length === 0 ? (
-                    <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-                ) : (
-                    <div className="space-y-4">
-                        {comments.map((comment) => (
-                            <div key={comment.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                                <div className="p-4">
-                                    <div className="flex items-start mb-2">
+                    <h4 className="text-lg font-semibold mt-6 mb-4">Comments ({comments.length})</h4>
+                    {comments.length === 0 ? (
+                        <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {comments.map((comment) => (
+                                <div key={comment.id} className="bg-white rounded-lg shadow-md p-4">
+                                    <div className="flex items-start">
                                         <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3 overflow-hidden">
                                             <img
                                                 src={`https://i.pravatar.cc/150?u=${comment.postedName}`}
-                                                alt="avatar"
-                                                className="w-full h-full object-cover"
+                                                alt={`${comment.postedName} avatar`}
+                                                className="w-12 h-12 rounded-full object-cover"
                                             />
                                         </div>
                                         <div className="flex-1">
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h5 className="font-semibold">{comment.postedName}</h5>
-                                                    <p className="text-sm text-gray-500">
-                                                        {comment.createdAt && new Date(comment.createdAt).toLocaleString('en-US', {
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                            year: 'numeric',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <p className="text-gray-700 mt-2">{comment.content}</p>
+                                            <h5 className="font-semibold">{comment.postedName}</h5>
+                                            <p className="text-sm text-gray-500">
+                                                {comment.createdAt && new Date(comment.createdAt).toLocaleString('en-US', {
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </p>
+                                            <p className="text-gray-700 mt-1">{comment.content}</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Snackbar */}
             {snackbar.open && (
-                <div className={`fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg flex items-center ${snackbar.severity === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
+                <div className={`fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg flex items-center ${snackbar.severity === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     <span>{snackbar.message}</span>
-                    <button
-                        onClick={handleCloseSnackbar}
-                        className="ml-4 font-bold focus:outline-none"
-                    >
-                        ×
-                    </button>
+                    <button onClick={handleCloseSnackbar} className="ml-4 font-bold">×</button>
                 </div>
             )}
-        </div>
+          </div>
+      </div>
     );
-
 };
 
 export default ViewTaskDetails;
+

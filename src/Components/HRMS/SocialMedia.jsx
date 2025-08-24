@@ -1,8 +1,8 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SocialMedia = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [activeTab, setActiveTab] = useState('feed');
   const [activeNoteFilter, setActiveNoteFilter] = useState('all');
   const [posts, setPosts] = useState([]);
@@ -19,13 +19,10 @@ const SocialMedia = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-
-
-
-    fetchNotes(); // Fetch notes on component mount
-    fetchIssues(); // Fetch issues on component mount
-    fetchPosts(); // Fetch posts on component mount
-    fetchComments(); // Fetch comments on component mount
+    fetchNotes();
+    fetchIssues();
+    fetchPosts();
+    fetchComments();
   }, []);
 
   const handleImageChange = (e) => {
@@ -46,25 +43,21 @@ const SocialMedia = () => {
     const formData = new FormData();
     formData.append('content', newPost);
     formData.append('author', userRole === 'admin' ? 'Admin' : 'Employee');
-    formData.append('image', selectedImage); // optional image
+    formData.append('image', selectedImage);
 
     try {
       const token = localStorage.getItem('token');
-
-      const response = await fetch('http://localhost:8080/api/post/createpost', {
+      const response = await fetch(`${API_BASE_URL}/api/post/createpost`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData, // FormData sends text + file together
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
       });
 
       if (!response.ok) throw new Error('Post upload failed');
-
       const data = await response.json();
 
       const post = {
-        id: data.id || data.postId, // Ensure id is set correctly
+        id: data.id || data.postId,
         content: data.content,
         author: data.userName,
         likes: data.likes,
@@ -85,24 +78,17 @@ const SocialMedia = () => {
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem('token');
-
-      const response = await fetch('http://localhost:8080/api/post/allpostbydesc', {
+      const response = await fetch(`${API_BASE_URL}/api/post/allpostbydesc`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch posts');
       const data = await response.json();
 
       const mappedPosts = Array.isArray(data)
         ? data.map(post => ({
-          id: post.id || post.postId, // Ensure id is set correctly
+          id: post.id || post.postId,
           content: post.content,
           author: post.userName,
           likes: post.likes || 0,
@@ -115,21 +101,16 @@ const SocialMedia = () => {
       setPosts(mappedPosts);
     } catch (error) {
       console.error('Error fetching posts:', error);
-      setPosts([]); // fallback
+      setPosts([]);
     }
   };
-
-
 
   const likePost = async (postId) => {
     try {
       const token = localStorage.getItem("token");
-
-      const response = await fetch(`http://localhost:8080/api/post/like/${postId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/post/like/${postId}`, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (!response.ok) {
@@ -138,78 +119,47 @@ const SocialMedia = () => {
       }
 
       const updatedPost = await response.json();
-
       setPosts(prev =>
         prev.map(p =>
           p.id === updatedPost.postId
-            ? {
-              ...p,
-              likes: updatedPost.likes,
-            }
+            ? { ...p, likes: updatedPost.likes }
             : p
         )
       );
-
     } catch (err) {
       alert(err.message || "Already liked this post");
       console.error("Like error:", err);
     }
   };
 
-
-
-
-
-
-
-
-
   const handleAddNote = async (e) => {
     e.preventDefault();
-
     if (newNote.trim() === '') return;
 
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user')); // Or get it from props/context/state
+    const user = JSON.parse(localStorage.getItem('user'));
 
     if (!token || !user?.id) {
       alert("User not authenticated.");
       return;
     }
 
-    const payload = {
-      content: newNote,
-      // similar to your leave payload
-    };
+    const payload = { content: newNote };
 
     try {
-
-      const response = await fetch("http://localhost:8080/api/note/createnote", {
+      const response = await fetch(`${API_BASE_URL}/api/note/createnote`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payload)
       });
 
       if (response.ok) {
         const data = await response.json();
-
         setNotes(prev => [
-          {
-            id: data.noteId,
-            content: data.content,
-            author: data.userName,
-            timestamp: 'Just now'
-          },
+          { id: data.noteId, content: data.content, author: data.userName, timestamp: 'Just now' },
           ...prev
         ]);
-
-
-
         setNewNote('');
-        alert("Note added successfully!");
       } else {
         alert("Failed to create note: " + response.status);
       }
@@ -221,25 +171,20 @@ const SocialMedia = () => {
 
   const fetchNotes = async () => {
     const token = localStorage.getItem('token');
-
     try {
-      const response = await fetch("http://localhost:8080/api/note/allnotes", {
+      const response = await fetch(`${API_BASE_URL}/api/note/allnotes`, {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
+        headers: { "Authorization": `Bearer ${token}` }
       });
 
       if (response.ok) {
         const data = await response.json();
-
         const mappedNotes = data.map((note) => ({
           id: note.noteId || note.id,
           content: note.content,
           author: note.userName || 'Unknown',
-          timestamp: 'Just now' // or format from note.createdAt
+          timestamp: 'Just now'
         }));
-
         setNotes(mappedNotes);
       } else {
         console.error("Failed to fetch notes:", response.status);
@@ -249,32 +194,20 @@ const SocialMedia = () => {
     }
   };
 
-
-
-
-
   const handleAddIssue = async () => {
     if (newIssue.trim() === '') return;
 
     const token = localStorage.getItem('token');
-    const issueDTO = {
-      content: newIssue,
-    };
+    const issueDTO = { content: newIssue };
 
     try {
-      const response = await fetch('http://localhost:8080/api/issue/createissue', {
+      const response = await fetch(`${API_BASE_URL}/api/issue/createissue`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(issueDTO)
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create issue');
-      }
-
+      if (!response.ok) throw new Error('Failed to create issue');
       const data = await response.json();
 
       setIssues(prev => [
@@ -294,29 +227,23 @@ const SocialMedia = () => {
     }
   };
 
-
   const fetchIssues = async () => {
     const token = localStorage.getItem('token');
-
     try {
-      const response = await fetch("http://localhost:8080/api/issue/allissues", {
+      const response = await fetch(`${API_BASE_URL}/api/issue/allissues`, {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
+        headers: { "Authorization": `Bearer ${token}` }
       });
 
       if (response.ok) {
         const data = await response.json();
-
         const mappedIssues = data.map((issue) => ({
           id: issue.id,
           content: issue.content,
-          author: issue.userName || 'Unknown', // Adjust based on your DTO
+          author: issue.userName || 'Unknown',
           status: issue.status || 'open',
-          timestamp: 'Just now' // Or use a formatter if `createdAt` is present
+          timestamp: 'Just now'
         }));
-
         setIssues(mappedIssues);
       } else {
         console.error("Failed to fetch issues:", response.status);
@@ -326,29 +253,18 @@ const SocialMedia = () => {
     }
   };
 
-
   const handleAddComment = async (postId) => {
     if (newComment.trim() === '') return;
 
     try {
       const token = localStorage.getItem('token');
-
-      const response = await fetch('http://localhost:8080/api/postcomment/createcomment', {
+      const response = await fetch(`${API_BASE_URL}/api/postcomment/createcomment`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          content: newComment,
-          postId: postId,
-        }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ content: newComment, postId })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to add comment');
-      }
-
+      if (!response.ok) throw new Error('Failed to add comment');
       const savedComment = await response.json();
 
       const updatedPosts = posts.map(post => {
@@ -377,26 +293,16 @@ const SocialMedia = () => {
     }
   };
 
-
-
   const fetchComments = async (postId) => {
     try {
       const token = localStorage.getItem('token');
-
-      const response = await fetch(`http://localhost:8080/api/postcomment/fetchcomments/${postId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/postcomment/fetchcomments/${postId}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // same as your POST request
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch comments');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch comments');
       const comments = await response.json();
-
 
       const updatedPosts = posts.map(post => {
         if (post.id === postId) {
@@ -419,8 +325,6 @@ const SocialMedia = () => {
     }
   };
 
-
-
   const filteredNotes = notes.filter(note => {
     if (activeNoteFilter === 'all') return true;
     if (activeNoteFilter === 'admin') return note.author === 'Admin';
@@ -428,21 +332,13 @@ const SocialMedia = () => {
     return true;
   });
 
-
-
-
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-
-
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Tabs */}
         <div className="flex border-b border-gray-300 mb-6">
           <button
-            className={`px-4 py-2 font-medium flex items-center ${activeTab === 'feed' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
+            className={`px-4 py-2 font-medium flex items-center ${activeTab === 'feed' ? 'text-[#00A3E1] border-b-2 border-[#00A3E1]' : 'text-gray-600 hover:text-[#008ac4]'}`}
             onClick={() => setActiveTab('feed')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -451,7 +347,7 @@ const SocialMedia = () => {
             Feed
           </button>
           <button
-            className={`px-4 py-2 font-medium flex items-center ${activeTab === 'notes' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
+            className={`px-4 py-2 font-medium flex items-center ${activeTab === 'notes' ? 'text-[#00A3E1] border-b-2 border-[#00A3E1]' : 'text-gray-600 hover:text-[#008ac4]'}`}
             onClick={() => setActiveTab('notes')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -461,7 +357,7 @@ const SocialMedia = () => {
           </button>
           {userRole === 'admin' && (
             <button
-              className={`px-4 py-2 font-medium flex items-center ${activeTab === 'issues' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
+              className={`px-4 py-2 font-medium flex items-center ${activeTab === 'issues' ? 'text-[#00A3E1] border-b-2 border-[#00A3E1]' : 'text-gray-600 hover:text-[#008ac4]'}`}
               onClick={() => setActiveTab('issues')}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -490,13 +386,13 @@ const SocialMedia = () => {
                     whileHover={{ scale: 1.01 }}
                   >
                     <h2 className="text-lg font-semibold mb-4 flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#00A3E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                       </svg>
                       Create Post
                     </h2>
                     <textarea
-                      className="w-full border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-[#00A3E1] focus:border-transparent"
                       rows="4"
                       placeholder="What's new?"
                       value={newPost}
@@ -544,7 +440,7 @@ const SocialMedia = () => {
                     </div>
 
                     <button
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition w-full flex items-center justify-center"
+                      className="bg-[#00A3E1] text-white px-4 py-2 rounded-lg hover:bg-[#008ac4] transition w-full flex items-center justify-center"
                       onClick={handleAddPost}
                       disabled={newPost.trim() === '' && !selectedImage}
                     >
@@ -560,7 +456,7 @@ const SocialMedia = () => {
               {/* Right Column - Posts */}
               <div className={`${userRole === 'admin' ? 'md:col-span-2' : 'md:col-span-3'}`}>
                 <h2 className="text-xl font-semibold mb-4 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#00A3E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                   Recent Posts
@@ -591,7 +487,7 @@ const SocialMedia = () => {
                         <div className="p-4">
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex items-center">
-                              <div className="bg-blue-100 text-blue-800 rounded-full w-10 h-10 flex items-center justify-center font-semibold">
+                              <div className="bg-[#00A3E1] text-white rounded-full w-10 h-10 flex items-center justify-center font-semibold">
                                 {post.author?.charAt(0)}
                               </div>
                               <div className="ml-3">
@@ -612,28 +508,26 @@ const SocialMedia = () => {
                         {post.imageUrl && (
                           <div className="border-t border-b border-gray-200">
                             <img
-                              src={`http://localhost:8080${post.imageUrl}`}
+                              src={`${API_BASE_URL}${post.imageUrl}`}
                               alt="Post"
                               className="w-full h-64 md:h-96 object-cover"
                             />
                           </div>
                         )}
 
-
                         {/* Post Actions */}
                         <div className="p-4 border-b border-gray-200">
                           <div className="flex items-center justify-between">
                             <button
-                              className="flex items-center text-gray-500 hover:text-blue-600 transition"
+                              className="flex items-center text-gray-500 hover:text-[#00A3E1] transition"
                               onClick={() => likePost(post._id || post.id || post.postId)}
-
                             >
                               <motion.span
                                 className="mr-1"
                                 whileTap={{ scale: 1.5 }}
                               >
                                 {post.likes > 0 ? (
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#00A3E1]" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                                   </svg>
                                 ) : (
@@ -646,8 +540,7 @@ const SocialMedia = () => {
                             </button>
 
                             <button
-                              className="flex items-center text-gray-500 hover:text-blue-600 transition"
-
+                              className="flex items-center text-gray-500 hover:text-[#00A3E1] transition"
                               onClick={() => setCommentingOnPost(commentingOnPost === post.id ? null : post.id)}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -656,14 +549,16 @@ const SocialMedia = () => {
                               <span>{post.comments?.length || 0}</span>
                             </button>
 
-                            {/* Share button */}
-                            <button className="flex items-center text-gray-500 hover:text-blue-600 transition">
-                              {/* Share icon */}
+                            <button className="flex items-center text-gray-500 hover:text-[#00A3E1] transition">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                              </svg>
+                              <span>Share</span>
                             </button>
                           </div>
                         </div>
 
-                        {/* Comments Section - Only shown when commentingOnPost matches this post's id */}
+                        {/* Comments Section */}
                         {commentingOnPost === post.id && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
@@ -694,13 +589,13 @@ const SocialMedia = () => {
 
                             {/* Add Comment Input */}
                             <div className="flex items-start">
-                              <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-2">
+                              <div className="bg-[#00A3E1] text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-2">
                                 {userRole === 'admin' ? 'A' : 'E'}
                               </div>
                               <div className="flex-1 flex">
                                 <input
                                   type="text"
-                                  className="flex-1 border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                  className="flex-1 border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00A3E1] focus:border-transparent text-sm"
                                   placeholder="Write a comment..."
                                   value={newComment}
                                   onChange={(e) => setNewComment(e.target.value)}
@@ -711,7 +606,7 @@ const SocialMedia = () => {
                                   }}
                                 />
                                 <button
-                                  className="bg-blue-600 text-white px-3 py-2 rounded-r-lg hover:bg-blue-700 transition text-sm disabled:bg-blue-400"
+                                  className="bg-[#00A3E1] text-white px-3 py-2 rounded-r-lg hover:bg-[#008ac4] transition text-sm disabled:bg-[#66c7ff]"
                                   onClick={() => handleAddComment(post.id)}
                                   disabled={!newComment.trim()}
                                 >
@@ -747,13 +642,13 @@ const SocialMedia = () => {
                   whileHover={{ scale: 1.01 }}
                 >
                   <h2 className="text-lg font-semibold mb-4 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#00A3E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     Add Note as {userRole === 'admin' ? 'Admin' : 'Employee'}
                   </h2>
                   <textarea
-                    className="w-full border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-[#00A3E1] focus:border-transparent"
                     rows="4"
                     placeholder={`Write a note as ${userRole === 'admin' ? 'admin' : 'employee'}...`}
                     value={newNote}
@@ -761,8 +656,8 @@ const SocialMedia = () => {
                   ></textarea>
                   <button
                     className={`${userRole === 'admin'
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
-                      : 'bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700'
+                      ? 'bg-[#00A3E1] hover:bg-[#008ac4]'
+                      : 'bg-green-600 hover:bg-green-700'
                       } text-white px-4 py-2 rounded-lg transition w-full flex items-center justify-center`}
                     onClick={handleAddNote}
                     disabled={newNote.trim() === ''}
@@ -779,7 +674,7 @@ const SocialMedia = () => {
               <div className="md:col-span-2">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#00A3E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Recent Notes
@@ -787,7 +682,7 @@ const SocialMedia = () => {
                   <div className="flex space-x-2">
                     <button
                       className={`px-3 py-1 rounded-full text-sm ${activeNoteFilter === 'all'
-                        ? 'bg-blue-100 text-blue-800'
+                        ? 'bg-[#e6f7ff] text-[#00A3E1]'
                         : 'bg-gray-100 text-gray-800'
                         }`}
                       onClick={() => setActiveNoteFilter('all')}
@@ -796,7 +691,7 @@ const SocialMedia = () => {
                     </button>
                     <button
                       className={`px-3 py-1 rounded-full text-sm ${activeNoteFilter === 'admin'
-                        ? 'bg-blue-100 text-blue-800'
+                        ? 'bg-[#e6f7ff] text-[#00A3E1]'
                         : 'bg-gray-100 text-gray-800'
                         }`}
                       onClick={() => setActiveNoteFilter('admin')}
@@ -835,7 +730,7 @@ const SocialMedia = () => {
                       <motion.div
                         key={note.id}
                         className={`bg-white rounded-xl shadow-md p-6 border-l-4 ${note.author === 'Admin'
-                          ? 'border-blue-500 bg-blue-50'
+                          ? 'border-[#00A3E1] bg-[#e6f7ff]'
                           : 'border-green-500 bg-green-50'
                           }`}
                         initial={{ opacity: 0, y: 20 }}
@@ -846,7 +741,7 @@ const SocialMedia = () => {
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center">
                             <div className={`rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-3 ${note.author === 'Admin'
-                              ? 'bg-blue-100 text-blue-800'
+                              ? 'bg-[#00A3E1] text-white'
                               : 'bg-green-100 text-green-800'
                               }`}>
                               {note.author.charAt(0)}
@@ -855,7 +750,7 @@ const SocialMedia = () => {
                             <div>
                               <h3 className="font-semibold">{note.author}</h3>
                               <span className={`text-xs ${note.author === 'Admin'
-                                ? 'text-blue-600'
+                                ? 'text-[#00A3E1]'
                                 : 'text-green-600'
                                 }`}>
                                 {note.author === 'Admin' ? 'Administrator' : 'Employee'}
@@ -866,9 +761,9 @@ const SocialMedia = () => {
                         </div>
                         <p className="text-gray-700">{note.content}</p>
                         {note.author === 'Admin' && (
-                          <div className="mt-2 flex items-center text-blue-600 text-sm">
+                          <div className="mt-2 flex items-center text-[#00A3E1] text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                             </svg>
                             Official Announcement
                           </div>
@@ -882,7 +777,7 @@ const SocialMedia = () => {
           )}
         </AnimatePresence>
 
-        {/* Issues Tab (Employee only) */}
+        {/* Issues Tab (Admin only) */}
         {userRole === 'admin' && (
           <AnimatePresence>
             {activeTab === 'issues' && (
@@ -900,20 +795,20 @@ const SocialMedia = () => {
                     whileHover={{ scale: 1.01 }}
                   >
                     <h2 className="text-lg font-semibold mb-4 flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#00A3E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                       Report Work Issue
                     </h2>
                     <textarea
-                      className="w-full border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full border border-gray-300 rounded-lg p-3 mb-3 focus:ring-2 focus:ring-[#00A3E1] focus:border-transparent"
                       rows="4"
                       placeholder="Describe the issue..."
                       value={newIssue}
                       onChange={(e) => setNewIssue(e.target.value)}
                     ></textarea>
                     <button
-                      className="bg-gradient-to-r from-red-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-red-700 hover:to-pink-700 transition w-full flex items-center justify-center"
+                      className="bg-[#00A3E1] text-white px-4 py-2 rounded-lg hover:bg-[#008ac4] transition w-full flex items-center justify-center"
                       onClick={handleAddIssue}
                       disabled={newIssue.trim() === ''}
                     >
@@ -928,7 +823,7 @@ const SocialMedia = () => {
                 {/* Right Column - Issues */}
                 <div className="md:col-span-2">
                   <h2 className="text-xl font-semibold mb-4 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#00A3E1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                     Your Reported Issues
@@ -957,7 +852,7 @@ const SocialMedia = () => {
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex items-center">
-                              <div className="bg-red-100 text-red-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-3">
+                              <div className="bg-[#00A3E1] text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-3">
                                 {issue.author.charAt(0)}
                               </div>
                               <h3 className="font-semibold">{issue.author}</h3>
@@ -972,7 +867,7 @@ const SocialMedia = () => {
                               }`}>
                               {issue.status.charAt(0).toUpperCase() + issue.status.slice(1)}
                             </span>
-                            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            <button className="text-[#00A3E1] hover:text-[#008ac4] text-sm font-medium">
                               View Details
                             </button>
                           </div>
@@ -991,4 +886,3 @@ const SocialMedia = () => {
 };
 
 export default SocialMedia;
-
