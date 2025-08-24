@@ -9,8 +9,8 @@ import {
   FaLightbulb
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -19,7 +19,12 @@ if (typeof window !== 'undefined' && !window.THREE) {
   window.THREE = THREE;
 }
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined' && !gsap.core?.globals()?.ScrollTrigger) {
+   gsap.registerPlugin(ScrollTrigger);
+ }
+
+
+// gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
     const navigate = useNavigate();
@@ -29,9 +34,6 @@ const Home = () => {
     const humanCanvasRef = useRef(null);
     const [rating, setRating] = useState(0);
     const [tasksCompleted, setTasksCompleted] = useState(0);
-
-
-    
     
     // Animation variants
     const containerVariants = {
