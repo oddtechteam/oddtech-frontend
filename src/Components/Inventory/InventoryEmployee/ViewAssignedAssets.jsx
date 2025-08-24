@@ -289,12 +289,17 @@ const ViewAssignedAssets = () => {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-            >
-              All Assets
-            </button>
+           <button
+  onClick={() => setFilter('all')}
+  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+    filter === 'all'
+      ? 'bg-[#00A3E1] text-white shadow-md'
+      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+  }`}
+>
+  All Assets
+</button>
+
             <button
               onClick={() => setFilter('active')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === 'active' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
@@ -325,12 +330,16 @@ const ViewAssignedAssets = () => {
           <h3 className="mt-4 text-xl font-medium text-gray-900">No assets found</h3>
           <p className="mt-2 text-gray-500">Try adjusting your search or filter criteria</p>
           <div className="mt-6">
-            <button
-              onClick={() => { setFilter('all'); setSearchTerm(''); }}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Reset Filters
-            </button>
+        <button
+  onClick={() => {
+    setFilter('all');
+    setSearchTerm('');
+  }}
+  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#00A3E1] hover:bg-[#0095D6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00A3E1]"
+>
+  Reset Filters
+</button>
+
           </div>
         </div>
       ) : (

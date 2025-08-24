@@ -1,4 +1,5 @@
 
+
 // import React, { useEffect, useState, useRef, useCallback } from "react";
 // import WebcamCapture from "./Webcam";
 // import { useNavigate } from "react-router-dom";
@@ -34,6 +35,7 @@
 //   const webcamRef = useRef(null);
 //   const [isLoading, setIsLoading] = useState(false);
 //   const [similarityThreshold] = useState(0.3); // Adjust threshold as needed
+//   //  const [similarityThreshold] = useState(0.3); // Adjust threshold as needed
 
 //   const fetchCache = useCallback(async () => {
 //     try {
@@ -86,6 +88,7 @@
 //       const cachedUser = cachedEmbeddings.find(u => u.email === loggedUser.email);
 //       if (!cachedUser) throw new Error("User not in cache");
 //       const cachedEmbedding = cachedUser.embedding;
+//       const userName = cachedUser.name || loggedUser.name || "User";
 
 //       // Compare embeddings in frontend
 //       const similarityScore = (cosineSimilarity(currentEmbedding, cachedEmbedding) + 1);
@@ -106,7 +109,7 @@
 
 //       // Send login data to backend
 //       const payload = {
-//         name: loggedUser.name || "Dhaval",
+//         name: userName,
 //         email: loggedUser.email,
 //         lat: position.coords.latitude,
 //         lng: position.coords.longitude,
@@ -127,10 +130,9 @@
 //       if (!loginData.name) throw new Error("Invalid response");
 
 //       // Success
-//       localStorage.setItem("token", loginData.token); // ✅ Store token
 //       localStorage.setItem("username", loginData.name);
 //       localStorage.setItem("role", loginData.role);
-//       setWelcomeUser(loginData.name);
+//       setWelcomeUser(userName);
 //       setShowModal(true);
 //     } catch (err) {
 //       console.error("FaceLogin Error:", err);
@@ -182,28 +184,18 @@
 
 
 
+
+
+
+
+
+
+
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import WebcamCapture from "./Webcam";
 import { useNavigate } from "react-router-dom";
 
-// Cosine similarity function for frontend comparison
-const cosineSimilarity = (a, b) => {
-  if (!a || !b || a.length !== b.length) return 0;
-  let dotProduct = 0;
-  let magnitudeA = 0;
-  let magnitudeB = 0;
 
-  for (let i = 0; i < a.length; i++) {
-    dotProduct += a[i] * b[i];
-    magnitudeA += a[i] * a[i];
-    magnitudeB += b[i] * b[i];
-  }
-
-  magnitudeA = Math.sqrt(magnitudeA);
-  magnitudeB = Math.sqrt(magnitudeB);
-
-  return magnitudeA && magnitudeB ? dotProduct / (magnitudeA * magnitudeB) : 0;
-};
 
 const FaceLogin = ({
   loggedUser,
@@ -216,7 +208,7 @@ const FaceLogin = ({
   const [cachedEmbeddings, setCachedEmbeddings] = useState(null);
   const webcamRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [similarityThreshold] = useState(0.3); // Adjust threshold as needed
+  const [similarityThreshold] = useState(1); // Adjust threshold as needed
 
   const fetchCache = useCallback(async () => {
     try {
@@ -271,13 +263,20 @@ const FaceLogin = ({
       const cachedEmbedding = cachedUser.embedding;
       const userName = cachedUser.name || loggedUser.name || "User";
 
-      // Compare embeddings in frontend
-      const similarityScore = (cosineSimilarity(currentEmbedding, cachedEmbedding) + 1);
-      console.log(`Similarity score: ${similarityScore}`);
+      // Compare embeddings on the server
+            const compareResponse = await fetch("http://localhost:5005/compare-embeddings", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                embedding1: currentEmbedding,
+                embedding2: cachedEmbedding
+              })
+            });
 
-      if (similarityScore < similarityThreshold) {
-        throw new Error("Face not recognized (low similarity score)");
-      }
+            if (!compareResponse.ok) throw new Error("Comparison failed");
+            const compareResult = await compareResponse.json();
+
+
 
       // Get geolocation (non-blocking)
       const position = await new Promise(resolve => {

@@ -162,7 +162,7 @@ const handleDelete = async (id) => {
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Manage Assets</h2>
-        <button
+        {/* <button
           onClick={() => {
             setIsAdding(!isAdding);
             if (editingId) {
@@ -179,7 +179,70 @@ const handleDelete = async (id) => {
           className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
         >
           {isAdding ? 'Cancel' : 'Add New Asset'}
-        </button>
+        </button> */}
+        {/* <button
+  onClick={() => {
+    setIsAdding(!isAdding);
+    if (editingId) {
+      setEditingId(null);
+      setNewAsset({
+        productId: '',
+        name: '',
+        serialNumber: '',
+        type: '',
+        assetCondition: 'Available'
+      });
+    }
+  }}
+  className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] text-white py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
+>
+  {isAdding ? 'Cancel' : 'Add New Asset'}
+</button> */}
+<button
+  onClick={() => {
+    setIsAdding(!isAdding);
+    if (editingId) {
+      setEditingId(null);
+      setNewAsset({
+        productId: '',
+        name: '',
+        serialNumber: '',
+        type: '',
+        assetCondition: 'Available'
+      });
+    }
+  }}
+  className="
+    w-full sm:w-auto
+    flex items-center justify-center gap-2
+    bg-gradient-to-r from-[#00A3E1] to-[#00AEEF]
+    text-white font-medium
+    py-2 px-5 rounded-lg
+    shadow-md shadow-[#00A3E1]/40
+    transition-all duration-300
+    hover:scale-105 hover:shadow-lg hover:shadow-[#00A3E1]/60
+    active:scale-95
+  "
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    {isAdding ? (
+      // Cancel icon
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    ) : (
+      // Plus icon
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+    )}
+  </svg>
+  {isAdding ? 'Cancel' : 'Add New Asset'}
+</button>
+
+
       </div>
 
       {error && (
@@ -265,13 +328,20 @@ const handleDelete = async (id) => {
           </div>
 
           <div className="mt-6">
-            <button
+            {/* <button
               onClick={handleAddAsset}
               className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
               disabled={!newAsset.name || !newAsset.serialNumber}
             >
               {editingId ? 'Update Asset' : 'Add Asset'}
-            </button>
+            </button> */}
+              <button
+    onClick={handleAddAsset}
+    className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] hover:from-[#0096D6] hover:to-[#009BD9] text-white py-2 px-6 rounded-lg transition-all duration-300 hover:scale-105"
+    disabled={!newAsset.name || !newAsset.serialNumber}
+  >
+    {editingId ? 'Update Asset' : 'Add Asset'} 
+  </button>
           </div>
         </motion.div>
       )}

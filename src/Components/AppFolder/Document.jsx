@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function DocumentManagementApp() {
   const API_BASE_URL = "http://localhost:8080/api/documents";
@@ -182,32 +183,42 @@ function DocumentManagementApp() {
     <div className="min-h-screen bg-gray-50">
       {/* Integrated Header */}
       <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          {/* <button 
-            onClick={() => navigate('/admindashboard')}
-            className="flex items-center text-blue-600 hover:text-blue-800 transition"
+        <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+
+          {/* Back button */}
+          <button
+            onClick={() => navigate('/app')}
+            className="flex items-center text-blue-600 hover:text-blue-800 transition text-sm sm:text-base"
           >
             <i className="fas fa-arrow-left mr-2"></i> Go Back
           </button>
-           */}
-          <div className="flex-1 max-w-xl mx-4">
-            <div className="relative">
+
+          {/* Search bar */}
+          <div className="w-full sm:flex-1 sm:max-w-xl sm:mx-4">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i className="fas fa-search text-gray-400 group-hover:text-blue-500 transition-colors duration-300"></i>
+              </div>
               <input
                 type="text"
                 placeholder="Search documents..."
-                className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 pl-12 text-sm border border-gray-200 rounded-full shadow-sm 
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                     transition-all duration-300 ease-in-out bg-white hover:shadow-md"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
           </div>
 
-          <div className="text-xl font-bold text-blue-600">
+          {/* Title */}
+          <div className="w-full sm:w-auto text-lg sm:text-xl font-bold text-blue-600 text-center sm:text-left">
             Document Manager
           </div>
+
         </div>
       </header>
+
 
       {/* Main Content */}
       <main className="py-8">
@@ -266,8 +277,18 @@ function DocumentManagementApp() {
                 <i className="fas fa-cloud-upload-alt text-blue-600 text-4xl mb-4"></i>
                 <h3 className="text-lg font-medium mb-2">Drag & Drop to Upload</h3>
                 <p className="text-gray-500 mb-6">Supported formats: PDF, DOC, DOCX, XLS, JPG, PNG</p>
-                <button
+                {/* <button
                   className="bg-blue-600 text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 mx-auto hover:bg-blue-700 transition"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsModalOpen(true);
+                  }}
+                >
+                  <i className="fas fa-plus"></i>
+                  Add Document
+                </button> */}
+                <button
+                  className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] hover:from-[#0096d1] hover:to-[#009bd8] text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 mx-auto transition"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsModalOpen(true);
@@ -316,12 +337,19 @@ function DocumentManagementApp() {
                 <p className="text-gray-500 max-w-md mx-auto mb-6">
                   Try changing your filters or upload a new document
                 </p>
-                <button
+                {/* <button
                   className="bg-blue-600 text-white py-2 px-6 rounded-full font-medium hover:bg-blue-700 transition"
                   onClick={() => setIsModalOpen(true)}
                 >
                   Add Your First Document
+                </button> */}
+                <button
+                  className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] text-white py-2 px-6 rounded-full font-medium hover:from-[#0095D5] hover:to-[#009FD5] transition"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Add Your First Document
                 </button>
+
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -561,3 +589,6 @@ function DocumentManagementApp() {
 }
 
 export default DocumentManagementApp;
+
+
+

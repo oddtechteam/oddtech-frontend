@@ -266,7 +266,7 @@ function DocumentManagementApp() {
                 <i className="fas fa-cloud-upload-alt text-blue-600 text-4xl mb-4"></i>
                 <h3 className="text-lg font-medium mb-2">Drag & Drop to Upload</h3>
                 <p className="text-gray-500 mb-6">Supported formats: PDF, DOC, DOCX, XLS, JPG, PNG</p>
-                <button
+                {/* <button
                   className="bg-blue-600 text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 mx-auto hover:bg-blue-700 transition"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -275,7 +275,18 @@ function DocumentManagementApp() {
                 >
                   <i className="fas fa-plus"></i>
                   Add Document
-                </button>
+                </button> */}
+                <button
+  className="bg-[#00A3E1] text-white py-3 px-6 rounded-full font-medium flex items-center gap-2 mx-auto hover:bg-[#00AEEF] transition"
+  onClick={(e) => {
+    e.stopPropagation();
+    setIsModalOpen(true);
+  }}
+>
+  <i className="fas fa-plus"></i>
+  Add Document
+</button>
+
               </div>
             </div>
           </div>
@@ -316,12 +327,19 @@ function DocumentManagementApp() {
                 <p className="text-gray-500 max-w-md mx-auto mb-6">
                   Try changing your filters or upload a new document
                 </p>
-                <button
+                {/* <button
                   className="bg-blue-600 text-white py-2 px-6 rounded-full font-medium hover:bg-blue-700 transition"
                   onClick={() => setIsModalOpen(true)}
                 >
                   Add Your First Document
-                </button>
+                </button> */}
+                <button
+  className="bg-[#00A3E1] text-white py-2 px-6 rounded-full font-medium hover:bg-[#00AEEF] transition"
+  onClick={() => setIsModalOpen(true)}
+>
+  Add Your First Document
+</button>
+
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

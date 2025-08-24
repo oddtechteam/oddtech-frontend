@@ -1,6 +1,5 @@
 
 // import React, { useState, useEffect } from 'react';
-// import logo from '../../assets/logoWhite.webp';
 // import axios from 'axios';
 // import {
 //     FaBuilding,
@@ -17,6 +16,7 @@
 // } from 'react-icons/fa';
 // import { GiCommercialAirplane } from 'react-icons/gi';
 // import { RiCustomerService2Fill } from 'react-icons/ri';
+// import logo from '../../assets/LOGO.png';
 
 // const AboutUs = () => {
 //     const [contactInfo, setContactInfo] = useState({
@@ -44,20 +44,20 @@
 //             try {
 //                 const response = await axios.get('https://your-api-url.com/contact-info');
 //                 setContactInfo({
-//                     registeredOffice: response.data.registeredOffice || "Shop No 56, Gr Flr, Bedekar Sadan No 3, Gharpure Path, Formally Known As Mugbhat Lane, Girgaon, Mumbai - 400004 Maharashtra, India",
-//                     works: response.data.works || "18th Road, Opp Electric Office, Chembur (east), Mumbai - 400071 Maharashtra, India",
-//                     localInquiry: response.data.localInquiry || "+91 9912567282",
-//                     globalInquiry: response.data.globalInquiry || "+1 569 3977856",
+//                     registeredOffice: response.data.registeredOffice || "Janai Nivas, Bungalow No. 36,Brahmachaitanya Society,Near Ambedkar Chowk, Warje Jakat Naka,Karvenagar, Pune, Maharashtra – 411052 ",
+//                     works: response.data.works || "Karvenagar, Pune, Maharashtra – 411052",
+//                     localInquiry: response.data.localInquiry || "+91 9373797703  ",
+//                     globalInquiry: response.data.globalInquiry || "+91 8485834885",
 //                     email: response.data.email || "support@gmail.com"
 //                 });
 //             } catch (err) {
 //                 setError('Failed to load contact information. Using default data.');
 //                 setContactInfo({
-//                     registeredOffice: "Shop No 56, Gr Flr, Bedekar Sadan No 3, Gharpure Path, Formally Known As Mugbhat Lane, Girgaon, Mumbai - 400004 Maharashtra, India",
-//                     works: "18th Road, Opp Electric Office, Chembur (east), Mumbai - 400071 Maharashtra, India",
-//                     localInquiry: "+91 9912567282",
-//                     globalInquiry: "+1 569 3977856",
-//                     email: "support@gmail.com"
+//                     registeredOffice: "Janai Nivas, Bungalow No. 36,Brahmachaitanya Society,Near Ambedkar Chowk, Warje Jakat Naka,Karvenagar, Pune, Maharashtra – 411052 ",
+//                     works: "Karvenagar, Pune, Maharashtra – 411052",
+//                     localInquiry: "+91 9373797703 ",
+//                     globalInquiry: "+91 8485834885",
+//                     email: "oddcreatives15@gmail.com"
 //                 });
 //             } finally {
 //                 setLoading(false);
@@ -79,49 +79,99 @@
 //         setShowContact(!showContact);
 //     };
 
-//     const CompanyStats = () => (
-//         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
-//             {[
-//                 { icon: <FaGlobe className="text-xl" />, title: "Global Presence", value: "15+", subtitle: "Countries", color: colors.primary },
-//                 { icon: <FaUsers className="text-xl" />, title: "Happy Clients", value: "2500+", subtitle: "Worldwide", color: colors.secondary },
-//                 { icon: <FaClock className="text-xl" />, title: "Years of", value: "12+", subtitle: "Experience", color: colors.accent },
-//                 { icon: <FaChartLine className="text-xl" />, title: "Projects", value: "500+", subtitle: "Completed", color: colors.primary }
-//             ].map((stat, index) => (
-//                 <div
-//                     key={index}
-//                     className="bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-xl group relative overflow-hidden"
-//                 >
-//                     <div
-//                         className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-//                         style={{
-//                             background: `linear-gradient(135deg, ${stat.color}20 0%, ${colors.primary}10 100%)`
-//                         }}
-//                     ></div>
-//                     <div
-//                         className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 group-hover:opacity-30 transition-all duration-700"
-//                         style={{ backgroundColor: stat.color }}
-//                     ></div>
+//     // const CompanyStats = () => (
+//     //     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
+//     //         {[
+//     //             { icon: <FaGlobe className="text-xl" />, title: "Global Presence", value: "15+", subtitle: "Countries", color: colors.primary },
+//     //             { icon: <FaUsers className="text-xl" />, title: "Happy Clients", value: "2500+", subtitle: "Worldwide", color: colors.secondary },
+//     //             { icon: <FaClock className="text-xl" />, title: "Years of", value: "12+", subtitle: "Experience", color: colors.accent },
+//     //             { icon: <FaChartLine className="text-xl" />, title: "Projects", value: "500+", subtitle: "Completed", color: colors.primary }
+//     //         ].map((stat, index) => (
+//     //             <div
+//     //                 key={index}
+//     //                 className="bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-xl group relative overflow-hidden"
+//     //             >
+//     //                 <div
+//     //                     className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+//     //                     style={{
+//     //                         background: `linear-gradient(135deg, ${stat.color}20 0%, ${colors.primary}10 100%)`
+//     //                     }}
+//     //                 ></div>
+//     //                 <div
+//     //                     className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 group-hover:opacity-30 transition-all duration-700"
+//     //                     style={{ backgroundColor: stat.color }}
+//     //                 ></div>
 
-//                     <div className="flex items-center relative z-10">
-//                         <div
-//                             className="p-3 rounded-full mr-4 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
-//                             style={{
-//                                 backgroundColor: `${stat.color}20`,
-//                                 boxShadow: `0 4px 6px ${stat.color}20`
-//                             }}
-//                         >
-//                             {stat.icon}
-//                         </div>
-//                         <div>
-//                             <p className="text-gray-500 text-sm group-hover:text-gray-600 transition-colors">{stat.title}</p>
-//                             <p className="text-2xl font-bold group-hover:text-blue-700 transition-colors" style={{ color: colors.dark }}>{stat.value}</p>
-//                             <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">{stat.subtitle}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-//             ))}
+//     //                 <div className="flex items-center relative z-10">
+//     //                     <div
+//     //                         className="p-3 rounded-full mr-4 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
+//     //                         style={{
+//     //                             backgroundColor: `${stat.color}20`,
+//     //                             boxShadow: `0 4px 6px ${stat.color}20`
+//     //                         }}
+//     //                     >
+//     //                         {stat.icon}
+//     //                     </div>
+//     //                     <div>
+//     //                         <p className="text-gray-500 text-sm group-hover:text-gray-600 transition-colors">{stat.title}</p>
+//     //                         <p className="text-2xl font-bold group-hover:text-blue-700 transition-colors" style={{ color: colors.dark }}>{stat.value}</p>
+//     //                         <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">{stat.subtitle}</p>
+//     //                     </div>
+//     //                 </div>
+//     //             </div>
+//     //         ))}
+//     //     </div>
+//     // );
+
+
+//     const CompanyStats = () => (
+//   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-8">
+//     {[
+//       { icon: <FaGlobe className="text-xl" />, title: "Global Presence", value: "15+", subtitle: "Countries", color: colors.primary },
+//       { icon: <FaUsers className="text-xl" />, title: "Happy Clients", value: "2500+", subtitle: "Worldwide", color: colors.secondary },
+//       { icon: <FaClock className="text-xl" />, title: "Years of", value: "12+", subtitle: "Experience", color: colors.accent },
+//       { icon: <FaChartLine className="text-xl" />, title: "Projects", value: "500+", subtitle: "Completed", color: colors.primary }
+//     ].map((stat, index) => (
+//       <div
+//         key={index}
+//         className="bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-xl group relative overflow-hidden"
+//       >
+//         {/* Hover Gradient */}
+//         <div
+//           className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+//           style={{
+//             background: `linear-gradient(135deg, ${stat.color}20 0%, ${colors.primary}10 100%)`
+//           }}
+//         ></div>
+
+//         {/* Accent Circle */}
+//         <div
+//           className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 group-hover:opacity-30 transition-all duration-700"
+//           style={{ backgroundColor: stat.color }}
+//         ></div>
+
+//         {/* Content */}
+//         <div className="flex items-center relative z-10">
+//           <div
+//             className="p-3 rounded-full mr-4 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
+//             style={{
+//               backgroundColor: `${stat.color}20`,
+//               boxShadow: `0 4px 6px ${stat.color}20`
+//             }}
+//           >
+//             {stat.icon}
+//           </div>
+//           <div>
+//             <p className="text-gray-500 text-sm group-hover:text-gray-600 transition-colors">{stat.title}</p>
+//             <p className="text-2xl font-bold group-hover:text-blue-700 transition-colors" style={{ color: colors.dark }}>{stat.value}</p>
+//             <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">{stat.subtitle}</p>
+//           </div>
 //         </div>
-//     );
+//       </div>
+//     ))}
+//   </div>
+// );
+
 
 //     const AboutSection = () => (
 //         <div className="bg-white rounded-3xl mt-5 shadow-2xl overflow-hidden p-8 group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1 mt-10">
@@ -196,7 +246,8 @@
 //         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1 mt-10">
 //             <div className="flex flex-col lg:flex-row">
 //                 {/* Map Section */}
-//                 <div className="w-full m-5 lg:w-2/5 lg:mt-40 h-64 lg:h-96 relative overflow-hidden rounded-t-2xl lg:rounded-l-2xl lg:rounded-r-none">
+//               <div className="w-4/6 sm:w-3/5 m-5 lg:w-2/5 lg:mt-40 h-64 lg:h-96 relative overflow-hidden rounded-t-2xl lg:rounded-l-2xl lg:rounded-r-none">
+
 //                     <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-100 opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
 //                     <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-blue-100 opacity-20 animate-float4 group-hover:opacity-30"></div>
 //                     <div className="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-blue-100 opacity-20 animate-float5 group-hover:opacity-30"></div>
@@ -210,13 +261,20 @@
 //                             width="100%"
 //                             height="100%"
 //                             id="gmap_canvas"
-//                             src="https://maps.google.com/maps?q=digicorp&t=&z=13&ie=UTF8&iwloc=&output=embed"
+//                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d236.50157479627595!2d73.80902028029736!3d18.48251784483144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf11d5492957%3A0x3d20af88e824ac19!2sJANAI%2CPLOT%20NO.36%2CBRAHMACHAITANYA%20HOUSING%20SOCIETY%2COLD%20WARJE%20JAKAT%20NAKA%2C%20WARJE%20PUNE%20411058!5e0!3m2!1sen!2sin!4v1752068151646!5m2!1sen!2sin"
 //                             frameBorder="0"
 //                             scrolling="no"
 //                             marginHeight="0"
 //                             marginWidth="0"
 //                             className="absolute inset-0 group-hover:scale-105 transition-transform duration-1000"
 //                         ></iframe>
+
+//                         {/* <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d236.50157479627595!2d73.80902028029736!3d18.48251784483144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf11d5492957%3A0x3d20af88e824ac19!2sJANAI%2CPLOT%20NO.36%2CBRAHMACHAITANYA%20HOUSING%20SOCIETY%2COLD%20WARJE%20JAKAT%20NAKA%2C%20WARJE%20PUNE%20411058!5e0!3m2!1sen!2sin!4v1752068151646!5m2!1sen!2sin"
+//                          allowfullscreen=""
+//                           loading="lazy" 
+//                           referrerpolicy="no-referrer-when-downgrade">
+
+//                           </iframe> */}
 //                     </div>
 //                 </div>
 
@@ -381,122 +439,122 @@
 //                     from { opacity: 0; transform: translateY(20px) scale(0.95); }
 //                     to { opacity: 1; transform: translateY(0) scale(1); }
 //                 }
-
+                
 //                 @keyframes pulseOnce {
 //                     0% { transform: scale(1); }
 //                     50% { transform: scale(1.03); }
 //                     100% { transform: scale(1); }
 //                 }
-
+                
 //                 @keyframes float1 {
 //                     0% { transform: translate(0, 0) rotate(0deg) scale(1); }
 //                     50% { transform: translate(15px, 15px) rotate(10deg) scale(1.05); }
 //                     100% { transform: translate(0, 0) rotate(0deg) scale(1); }
 //                 }
-
+                
 //                 @keyframes float2 {
 //                     0% { transform: translate(0, 0) rotate(0deg) scale(1); }
 //                     50% { transform: translate(-15px, -15px) rotate(-10deg) scale(0.95); }
 //                     100% { transform: translate(0, 0) rotate(0deg) scale(1); }
 //                 }
-
+                
 //                 @keyframes float3 {
 //                     0% { transform: translate(0, 0) scale(1) rotate(0deg); }
 //                     50% { transform: translate(10px, -10px) scale(1.1) rotate(10deg); }
 //                     100% { transform: translate(0, 0) scale(1) rotate(0deg); }
 //                 }
-
+                
 //                 @keyframes float4 {
 //                     0% { transform: translate(0, 0) scale(1); }
 //                     50% { transform: translate(25px, 15px) scale(1.1); }
 //                     100% { transform: translate(0, 0) scale(1); }
 //                 }
-
+                
 //                 @keyframes float5 {
 //                     0% { transform: translate(0, 0) scale(1); }
 //                     50% { transform: translate(-20px, -20px) scale(0.9); }
 //                     100% { transform: translate(0, 0) scale(1); }
 //                 }
-
+                
 //                 @keyframes float6 {
 //                     0% { transform: translate(0, 0) scale(1); }
 //                     50% { transform: translate(-60px, -40px) scale(1.1); }
 //                     100% { transform: translate(0, 0) scale(1); }
 //                 }
-
+                
 //                 @keyframes float7 {
 //                     0% { transform: translate(0, 0) scale(1); }
 //                     50% { transform: translate(50px, 30px) scale(0.9); }
 //                     100% { transform: translate(0, 0) scale(1); }
 //                 }
-
+                
 //                 @keyframes float8 {
 //                     0% { transform: translate(0, 0) scale(1); }
 //                     50% { transform: translate(40px, -40px) scale(1.05); }
 //                     100% { transform: translate(0, 0) scale(1); }
 //                 }
-
+                
 //                 @keyframes pulse {
 //                     0% { transform: scale(0.95); opacity: 0.7; }
 //                     50% { transform: scale(1.05); opacity: 1; }
 //                     100% { transform: scale(0.95); opacity: 0.7; }
 //                 }
-
+                
 //                 @keyframes ping {
 //                     0% { transform: scale(1); opacity: 1; }
 //                     75%, 100% { transform: scale(2); opacity: 0; }
 //                 }
-
+                
 //                 .animate-fadeIn {
 //                     animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 //                     opacity: 0;
 //                 }
-
+                
 //                 .animate-fadeIn.delay-100 { animation-delay: 0.1s; }
 //                 .animate-fadeIn.delay-200 { animation-delay: 0.2s; }
 //                 .animate-fadeIn.delay-300 { animation-delay: 0.3s; }
 //                 .animate-fadeIn.delay-400 { animation-delay: 0.4s; }
-
+                
 //                 .animate-pulse-once {
 //                     animation: pulseOnce 1.2s ease-in-out;
 //                 }
-
+                
 //                 .animate-float1 {
 //                     animation: float1 8s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float2 {
 //                     animation: float2 10s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float3 {
 //                     animation: float3 9s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float4 {
 //                     animation: float4 11s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float5 {
 //                     animation: float5 13s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float6 {
 //                     animation: float6 17s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float7 {
 //                     animation: float7 20s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-float8 {
 //                     animation: float8 22s ease-in-out infinite;
 //                 }
-
+                
 //                 .animate-pulse {
 //                     animation: pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 //                 }
-
+                
 //                 .animate-ping {
 //                     animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 //                 }
@@ -505,7 +563,23 @@
 //     );
 // };
 
-// export default AboutUs;  
+// export default AboutUs;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 import React, { useState, useEffect } from 'react';
@@ -588,49 +662,99 @@ const AboutUs = () => {
         setShowContact(!showContact);
     };
 
-    const CompanyStats = () => (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
-            {[
-                { icon: <FaGlobe className="text-xl" />, title: "Global Presence", value: "15+", subtitle: "Countries", color: colors.primary },
-                { icon: <FaUsers className="text-xl" />, title: "Happy Clients", value: "2500+", subtitle: "Worldwide", color: colors.secondary },
-                { icon: <FaClock className="text-xl" />, title: "Years of", value: "12+", subtitle: "Experience", color: colors.accent },
-                { icon: <FaChartLine className="text-xl" />, title: "Projects", value: "500+", subtitle: "Completed", color: colors.primary }
-            ].map((stat, index) => (
-                <div
-                    key={index}
-                    className="bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-xl group relative overflow-hidden"
-                >
-                    <div
-                        className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                            background: `linear-gradient(135deg, ${stat.color}20 0%, ${colors.primary}10 100%)`
-                        }}
-                    ></div>
-                    <div
-                        className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 group-hover:opacity-30 transition-all duration-700"
-                        style={{ backgroundColor: stat.color }}
-                    ></div>
+    // const CompanyStats = () => (
+    //     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
+    //         {[
+    //             { icon: <FaGlobe className="text-xl" />, title: "Global Presence", value: "15+", subtitle: "Countries", color: colors.primary },
+    //             { icon: <FaUsers className="text-xl" />, title: "Happy Clients", value: "2500+", subtitle: "Worldwide", color: colors.secondary },
+    //             { icon: <FaClock className="text-xl" />, title: "Years of", value: "12+", subtitle: "Experience", color: colors.accent },
+    //             { icon: <FaChartLine className="text-xl" />, title: "Projects", value: "500+", subtitle: "Completed", color: colors.primary }
+    //         ].map((stat, index) => (
+    //             <div
+    //                 key={index}
+    //                 className="bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-xl group relative overflow-hidden"
+    //             >
+    //                 <div
+    //                     className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+    //                     style={{
+    //                         background: `linear-gradient(135deg, ${stat.color}20 0%, ${colors.primary}10 100%)`
+    //                     }}
+    //                 ></div>
+    //                 <div
+    //                     className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 group-hover:opacity-30 transition-all duration-700"
+    //                     style={{ backgroundColor: stat.color }}
+    //                 ></div>
 
-                    <div className="flex items-center relative z-10">
-                        <div
-                            className="p-3 rounded-full mr-4 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
-                            style={{
-                                backgroundColor: `${stat.color}20`,
-                                boxShadow: `0 4px 6px ${stat.color}20`
-                            }}
-                        >
-                            {stat.icon}
-                        </div>
-                        <div>
-                            <p className="text-gray-500 text-sm group-hover:text-gray-600 transition-colors">{stat.title}</p>
-                            <p className="text-2xl font-bold group-hover:text-blue-700 transition-colors" style={{ color: colors.dark }}>{stat.value}</p>
-                            <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">{stat.subtitle}</p>
-                        </div>
-                    </div>
-                </div>
-            ))}
+    //                 <div className="flex items-center relative z-10">
+    //                     <div
+    //                         className="p-3 rounded-full mr-4 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
+    //                         style={{
+    //                             backgroundColor: `${stat.color}20`,
+    //                             boxShadow: `0 4px 6px ${stat.color}20`
+    //                         }}
+    //                     >
+    //                         {stat.icon}
+    //                     </div>
+    //                     <div>
+    //                         <p className="text-gray-500 text-sm group-hover:text-gray-600 transition-colors">{stat.title}</p>
+    //                         <p className="text-2xl font-bold group-hover:text-blue-700 transition-colors" style={{ color: colors.dark }}>{stat.value}</p>
+    //                         <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">{stat.subtitle}</p>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         ))}
+    //     </div>
+    // );
+
+
+    const CompanyStats = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-8">
+    {[
+      { icon: <FaGlobe className="text-xl" />, title: "Global Presence", value: "15+", subtitle: "Countries", color: colors.primary },
+      { icon: <FaUsers className="text-xl" />, title: "Happy Clients", value: "2500+", subtitle: "Worldwide", color: colors.secondary },
+      { icon: <FaClock className="text-xl" />, title: "Years of", value: "12+", subtitle: "Experience", color: colors.accent },
+      { icon: <FaChartLine className="text-xl" />, title: "Projects", value: "500+", subtitle: "Completed", color: colors.primary }
+    ].map((stat, index) => (
+      <div
+        key={index}
+        className="bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-xl group relative overflow-hidden"
+      >
+        {/* Hover Gradient */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(135deg, ${stat.color}20 0%, ${colors.primary}10 100%)`
+          }}
+        ></div>
+
+        {/* Accent Circle */}
+        <div
+          className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10 group-hover:opacity-30 transition-all duration-700"
+          style={{ backgroundColor: stat.color }}
+        ></div>
+
+        {/* Content */}
+        <div className="flex items-center relative z-10">
+          <div
+            className="p-3 rounded-full mr-4 transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
+            style={{
+              backgroundColor: `${stat.color}20`,
+              boxShadow: `0 4px 6px ${stat.color}20`
+            }}
+          >
+            {stat.icon}
+          </div>
+          <div>
+            <p className="text-gray-500 text-sm group-hover:text-gray-600 transition-colors">{stat.title}</p>
+            <p className="text-2xl font-bold group-hover:text-blue-700 transition-colors" style={{ color: colors.dark }}>{stat.value}</p>
+            <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">{stat.subtitle}</p>
+          </div>
         </div>
-    );
+      </div>
+    ))}
+  </div>
+);
+
 
     const AboutSection = () => (
         <div className="bg-white rounded-3xl mt-5 shadow-2xl overflow-hidden p-8 group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1 mt-10">
@@ -705,7 +829,8 @@ const AboutUs = () => {
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden group hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1 mt-10">
             <div className="flex flex-col lg:flex-row">
                 {/* Map Section */}
-                <div className="w-full m-5 lg:w-2/5 lg:mt-40 h-64 lg:h-96 relative overflow-hidden rounded-t-2xl lg:rounded-l-2xl lg:rounded-r-none">
+              <div className="w-4/6 sm:w-3/5 m-5 lg:w-2/5 lg:mt-40 h-64 lg:h-96 relative overflow-hidden rounded-t-2xl lg:rounded-l-2xl lg:rounded-r-none">
+
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-100 opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
                     <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-blue-100 opacity-20 animate-float4 group-hover:opacity-30"></div>
                     <div className="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-blue-100 opacity-20 animate-float5 group-hover:opacity-30"></div>
@@ -1022,3 +1147,31 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

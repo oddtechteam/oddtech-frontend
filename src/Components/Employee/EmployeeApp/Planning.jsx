@@ -392,12 +392,19 @@ const MainContent = ({ tasks, chartData, chartOptions, onAddTask, onEditTask, on
     <div className="bg-white rounded-xl shadow">
       <div className="p-5 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-lg font-semibold text-blue-600">Tasks</h2>
-        <button 
+        {/* <button 
           className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center gap-2 transition"
           onClick={onAddTask}
         >
           <i className="fas fa-plus"></i> Add New Task
-        </button>
+        </button> */}
+        <button 
+  className="bg-[#00A3E1] hover:bg-[#00AEEF] text-white py-2 px-4 rounded-lg flex items-center gap-2 transition"
+  onClick={onAddTask}
+>
+  <i className="fas fa-plus"></i> Add New Task
+</button>
+
       </div>
       
       <TasksList
@@ -618,12 +625,19 @@ const TaskModal = ({ isOpen, task, onClose, onSubmit }) => (
           >
             Cancel
           </button>
-          <button 
+          {/* <button 
             type="submit" 
             className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
           >
             Save Task
-          </button>
+          </button> */}
+          <button 
+  type="submit" 
+  className="py-2 px-4 bg-[#00A3E1] hover:bg-[#00AEEF] text-white rounded-lg transition"
+>
+  Save Task
+</button>
+
         </div>
       </form>
     </div>

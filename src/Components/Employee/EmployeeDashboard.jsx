@@ -5,6 +5,7 @@
 // import { DateRangePicker } from 'react-date-range';
 // import 'react-date-range/dist/styles.css';
 // import 'react-date-range/dist/theme/default.css';
+
 // import {
 //     Menu,
 //     MenuItem,
@@ -105,6 +106,7 @@
 // };
 
 // const TaskCard = ({ task, onView, onEdit }) => {
+//   const navigate = useNavigate();
 //     const { isOverdue, isDueToday } = compareDates(task.dueDate);
 //     const taskIsOverdue = isOverdue && task.taskStatus !== 'COMPLETED';
 //     const taskIsDueToday = isDueToday && task.taskStatus !== 'COMPLETED';
@@ -163,7 +165,12 @@
 //                             <span className="text-gray-600">Status:</span>
 //                             <StatusChip status={task.taskStatus} />
 //                         </div>
+//                         <div className="flex items-center">
+//                             <span className="text-gray-600 mr-2">Company:</span>
+//                             <span className="font-semibold">{task.companyName}</span>
+//                         </div>
 //                     </div>
+                    
 
 //                     <div className="flex justify-end space-x-2 mt-3">
 //                         <Tooltip title="View Details">
@@ -198,6 +205,7 @@
 //                     <TableRow className="bg-gray-100">
 //                         <TableCell>Title</TableCell>
 //                         <TableCell>Description</TableCell>
+//                         <TableCell>Company</TableCell>
 //                         <TableCell>Start Date</TableCell>
 //                         <TableCell>Due Date</TableCell>
 //                         <TableCell>Priority</TableCell>
@@ -225,6 +233,11 @@
 //                                 <TableCell>
 //                                     <p className="text-gray-700 line-clamp-1 w-80">{task.description}</p>
 //                                 </TableCell>
+
+//                                 <TableCell>
+//                                     <span className="text-gray-700">{task.companyName}</span>
+//                                 </TableCell>
+
 //                                 <TableCell>{formatDate(task.startDate)}</TableCell>
 //                                 <TableCell>
 //                                     <span className={`${taskIsOverdue ? 'text-red-600' : taskIsDueToday ? 'text-yellow-600' : ''}`}>
@@ -460,7 +473,8 @@
 //                 task.title.toLowerCase().includes(query) ||
 //                 task.description.toLowerCase().includes(query) ||
 //                 task.taskStatus.toLowerCase().includes(query) ||
-//                 task.priority.toLowerCase().includes(query)
+//                 task.priority.toLowerCase().includes(query) ||
+//                 task.companyName.toLowerCase().includes(query)
 //             );
 //         }
 
@@ -541,286 +555,279 @@
 //     const sortedGroupKeys = Object.keys(groupedTasks).sort((a, b) => new Date(a) - new Date(b));
 
 //     return (
-//         <div className="bg-gradient-to-tr from-blue-50 to-blue-100 min-h-screen p-4 md:p-6">
-//             <div className="max-w-7xl mx-auto mt-20 bg-gradient-to-tr from-blue-50 to-blue-100">
-//                 <div className="flex justify-between items-center mb-6">
-//                     <h1 className="text-2xl font-bold text-gray-800">Your Tasks</h1>
+     
 
-//                     {/* Search and Filter Section */}
-//                     <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-//                         {/* Search Bar */}
-//                         <div className="relative flex-grow max-w-md">
-//                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-//                                 <SearchIcon className="h-5 w-5 text-gray-400" />
-//                             </div>
-//                             <input
-//                                 type="text"
-//                                 placeholder="Search tasks..."
-//                                 value={searchQuery}
-//                                 onChange={(e) => handleSearch(e.target.value)}
-//                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700"
-//                             />
-//                         </div>
+//         <div className="bg-gradient-to-tr from-blue-50 to-blue-100 min-h-screen p-4 sm:p-6">
+//   <div className="max-w-7xl mx-auto mt-16 sm:mt-20 bg-gradient-to-tr from-blue-50 to-blue-100">
+//     <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+//       <h1 className="text-2xl font-bold text-gray-800">Your Tasks</h1>
 
-//                         <div className="flex flex-wrap items-center gap-4 justify-between">
-//                             <div className="relative">
-//                                 <button
-//                                     className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                                     onClick={() => setShowStartDatePicker(!showStartDatePicker)}
-//                                 >
-//                                     Start Date: {formatRangeDisplay(startDateRange.startDate, startDateRange.endDate)}
-//                                 </button>
-
-//                                 {showStartDatePicker && (
-//                                     <div className="absolute z-10 mt-2 bg-white shadow-lg rounded-md left-0 max-w-[90vw] overflow-x-auto">
-//                                         <DateRangePicker
-//                                             ranges={[startDateRange]}
-//                                             onChange={item => {
-//                                                 setStartDateRange(item.selection);
-//                                                 setShowStartDatePicker(false);
-//                                             }}
-//                                         />
-//                                     </div>
-//                                 )}
-//                             </div>
-
-//                             <div className="relative">
-//                                 <button
-//                                     className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                                     onClick={() => setShowDueDatePicker(!showDueDatePicker)}
-//                                 >
-//                                     Due Date: {formatRangeDisplay(dueDateRange.startDate, dueDateRange.endDate)}
-//                                 </button>
-
-//                                 {showDueDatePicker && (
-//                                     <div className="absolute z-10 mt-2 bg-white shadow-lg rounded-md left-0 max-w-[90vw] overflow-x-auto">
-//                                         <DateRangePicker
-//                                             ranges={[dueDateRange]}
-//                                             onChange={item => {
-//                                                 setDueDateRange(item.selection);
-//                                                 setShowDueDatePicker(false);
-//                                             }}
-//                                         />
-//                                     </div>
-//                                 )}
-//                             </div>
-
-//                             <button
-//                                 onClick={handleClearFilters}
-//                                 className="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded"
-//                             >
-//                                 Clear Filters
-//                             </button>
-//                         </div>
-//                     </div>
-
-
-//                     <div className="flex items-center">
-//                         <Tooltip title={viewMode === 'grid' ? 'Switch to List View' : 'Switch to Grid View'}>
-//                             <IconButton
-//                                 color="inherit"
-//                                 onClick={toggleViewMode}
-//                                 className="mr-2"
-//                             >
-//                                 {viewMode === 'grid' ? <ViewListIcon /> : <GridViewIcon />}
-//                             </IconButton>
-//                         </Tooltip>
-
-//                         <Tooltip title="Notifications">
-//                             <IconButton
-//                                 color="inherit"
-//                                 onClick={handleNotificationClick}
-//                                 className="relative"
-//                             >
-//                                 <Badge
-//                                     badgeContent={unseenNotifications.length}
-//                                     color="error"
-//                                     overlap="circular"
-//                                 >
-//                                     <motion.div
-//                                         animate={unseenNotifications.length > 0 ? {
-//                                             scale: [1, 1.2, 1],
-//                                             transition: { repeat: Infinity, duration: 2 }
-//                                         } : {}}
-//                                     >
-//                                         <NotificationsIcon className="text-gray-600" />
-//                                     </motion.div>
-//                                 </Badge>
-//                             </IconButton>
-//                         </Tooltip>
-//                     </div>
-//                 </div>
-
-//                 {/* Notification Menu */}
-//                 <Menu
-//                     anchorEl={notificationAnchorEl}
-//                     open={Boolean(notificationAnchorEl)}
-//                     onClose={handleNotificationClose}
-//                     anchorOrigin={{
-//                         vertical: 'bottom',
-//                         horizontal: 'right',
-//                     }}
-//                     transformOrigin={{
-//                         vertical: 'top',
-//                         horizontal: 'right',
-//                     }}
-//                     PaperProps={{
-//                         style: {
-//                             width: '400px',
-//                             maxHeight: '500px',
-//                         },
-//                     }}
-//                 >
-//                     <div className="p-2">
-//                         <div className="flex justify-between items-center px-2 py-1 border-b">
-//                             <h3 className="font-bold">Recent Task Notifications</h3>
-//                             {unseenNotifications.length > 0 && (
-//                                 <Button
-//                                     size="small"
-//                                     onClick={clearAllNotifications}
-//                                     color="secondary"
-//                                 >
-//                                     Clear All
-//                                 </Button>
-//                             )}
-//                         </div>
-
-//                         {unseenNotifications.length === 0 ? (
-//                             <div className="p-4 text-center text-gray-500">
-//                                 No new notifications
-//                             </div>
-//                         ) : (
-//                             <List dense>
-//                                 <AnimatePresence>
-//                                     {unseenNotifications.map((task) => (
-//                                         <motion.div
-//                                             key={task.id}
-//                                             initial={{ opacity: 0, y: -10 }}
-//                                             animate={{ opacity: 1, y: 0 }}
-//                                             exit={{ opacity: 0, x: 100 }}
-//                                             transition={{ duration: 0.3 }}
-//                                         >
-//                                             <ListItem
-//                                                 button
-//                                                 onClick={() => {
-//                                                     navigate(`/viewemployeetaskdetails/${task.id}`);
-//                                                     handleNotificationClose();
-//                                                 }}
-//                                             >
-//                                                 <ListItemText
-//                                                     primary={task.title || "New Task"}
-//                                                     secondary={task.description || "Click to view details"}
-//                                                     secondaryTypographyProps={{ noWrap: true }}
-//                                                 />
-//                                                 <ListItemSecondaryAction>
-//                                                     <IconButton
-//                                                         edge="end"
-//                                                         aria-label="remove"
-//                                                         onClick={(e) => {
-//                                                             e.stopPropagation();
-//                                                             removeNotification(task.id);
-//                                                         }}
-//                                                     >
-//                                                         <CloseIcon fontSize="small" />
-//                                                     </IconButton>
-//                                                 </ListItemSecondaryAction>
-//                                             </ListItem>
-//                                         </motion.div>
-//                                     ))}
-//                                 </AnimatePresence>
-//                             </List>
-//                         )}
-//                     </div>
-//                 </Menu>
-
-//                 {tasks.length === 0 ? (
-//                     <div className="text-center py-10">
-//                         <p className="text-gray-500">
-//                             {searchQuery
-//                                 ? "No tasks found matching your search criteria"
-//                                 : "No tasks found matching your filters"}
-//                         </p>
-//                         {(startDateRange.startDate || dueDateRange.startDate || searchQuery) && (
-//                             <Button
-//                                 variant="text"
-//                                 color="primary"
-//                                 onClick={handleClearFilters}
-//                                 className="mt-2"
-//                             >
-//                                 Clear all filters
-//                             </Button>
-//                         )}
-//                     </div>
-//                 ) : viewMode === 'grid' ? (
-//                     <>
-//                         {sortedGroupKeys.map((dateKey) => (
-//                             <div key={dateKey} className="mb-8">
-//                                 <h2 className="text-lg font-semibold text-gray-700 mb-4">
-//                                     Tasks Starting: {formatDate(dateKey)}
-//                                 </h2>
-
-//                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-//                                     {groupedTasks[dateKey].map((task) => (
-//                                         <TaskCard
-//                                             key={task.id}
-//                                             task={task}
-//                                             onView={handleViewTask}
-//                                             onEdit={handleMenuOpen}
-//                                         />
-//                                     ))}
-//                                 </div>
-//                             </div>
-//                         ))}
-//                     </>
-//                 ) : (
-//                     <TaskTable
-//                         tasks={tasks}
-//                         onView={handleViewTask}
-//                         onEdit={handleMenuOpen}
-//                     />
-//                 )}
-//             </div>
-
-//             {/* Task Status Menu */}
-//             <Menu
-//                 anchorEl={anchorEl}
-//                 open={Boolean(anchorEl)}
-//                 onClose={handleMenuClose}
-//             >
-//                 <MenuItem onClick={() => handleStatusUpdate('PENDING')}>Mark as Pending</MenuItem>
-//                 <MenuItem onClick={() => handleStatusUpdate('INPROGRESS')}>Mark as In Progress</MenuItem>
-//                 <MenuItem onClick={() => handleStatusUpdate('COMPLETED')}>Mark as Completed</MenuItem>
-//             </Menu>
-
-//             {/* Snackbar */}
-//             <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar}>
-//                 <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
-//                     {snackbar.message}
-//                 </MuiAlert>
-//             </Snackbar>
-
-//             {/* Welcome Popup for Today's Tasks */}
-//             <Dialog open={showWelcomePopup} onClose={() => setShowWelcomePopup(false)}>
-//                 <DialogTitle>New Tasks Assigned Today</DialogTitle>
-//                 <DialogContent dividers>
-//                     {todaysTasks.map((task) => (
-//                         <div key={task.id} className="mb-4">
-//                             <h3 className="font-semibold">{task.title}</h3>
-//                             <p>{task.description}</p>
-//                         </div>
-//                     ))}
-//                 </DialogContent>
-//                 <DialogActions>
-//                     <Button onClick={() => setShowWelcomePopup(false)} color="primary">
-//                         Close
-//                     </Button>
-//                 </DialogActions>
-//             </Dialog>
+//       {/* Search and Filter Section */}
+//       <div className="w-full flex flex-col sm:flex-row sm:items-center gap-4">
+//         {/* Search Bar */}
+//         <div className="relative flex-grow w-full max-w-md">
+//           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+//             <SearchIcon className="h-5 w-5 text-gray-400" />
+//           </div>
+//           <input
+//             type="text"
+//             placeholder="Search tasks..."
+//             value={searchQuery}
+//             onChange={(e) => handleSearch(e.target.value)}
+//             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700"
+//           />
 //         </div>
+
+//         {/* Date Filters */}
+//         <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+//           {/* Start Date */}
+//           <div className="relative">
+//             <button
+//               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               onClick={() => setShowStartDatePicker(!showStartDatePicker)}
+//             >
+//               Start Date: {formatRangeDisplay(startDateRange.startDate, startDateRange.endDate)}
+//             </button>
+//             {showStartDatePicker && (
+//               <div className="absolute z-10 mt-2 bg-white shadow-lg rounded-md left-0 max-w-[90vw] overflow-x-auto">
+//                 <DateRangePicker
+//                   ranges={[startDateRange]}
+//                   onChange={item => {
+//                     setStartDateRange(item.selection);
+//                     setShowStartDatePicker(false);
+//                   }}
+//                 />
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Due Date */}
+//           <div className="relative">
+//             <button
+//               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//               onClick={() => setShowDueDatePicker(!showDueDatePicker)}
+//             >
+//               Due Date: {formatRangeDisplay(dueDateRange.startDate, dueDateRange.endDate)}
+//             </button>
+//             {showDueDatePicker && (
+//               <div className="absolute z-10 mt-2 bg-white shadow-lg rounded-md left-0 max-w-[90vw] overflow-x-auto">
+//                 <DateRangePicker
+//                   ranges={[dueDateRange]}
+//                   onChange={item => {
+//                     setDueDateRange(item.selection);
+//                     setShowDueDatePicker(false);
+//                   }}
+//                 />
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Clear Filters */}
+//           <button
+//             onClick={handleClearFilters}
+//             className="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded"
+//           >
+//             Clear Filters
+//           </button>
+//         </div>
+//       </div>
+
+//       {/* Grid/List Toggle and Notification */}
+//       <div className="flex items-center gap-2 mt-4 lg:mt-0">
+//         <Tooltip title={viewMode === 'grid' ? 'Switch to List View' : 'Switch to Grid View'}>
+//           <IconButton color="inherit" onClick={toggleViewMode}>
+//             {viewMode === 'grid' ? <ViewListIcon /> : <GridViewIcon />}
+//           </IconButton>
+//         </Tooltip>
+
+//         <Tooltip title="Notifications">
+//           <IconButton color="inherit" onClick={handleNotificationClick} className="relative">
+//             <Badge
+//               badgeContent={unseenNotifications.length}
+//               color="error"
+//               overlap="circular"
+//             >
+//               <motion.div
+//                 animate={unseenNotifications.length > 0 ? {
+//                   scale: [1, 1.2, 1],
+//                   transition: { repeat: Infinity, duration: 2 }
+//                 } : {}}
+//               >
+//                 <NotificationsIcon className="text-gray-600" />
+//               </motion.div>
+//             </Badge>
+//           </IconButton>
+//         </Tooltip>
+//       </div>
+//     </div>
+
+//     {/* Notification Dropdown */}
+//     <Menu
+//       anchorEl={notificationAnchorEl}
+//       open={Boolean(notificationAnchorEl)}
+//       onClose={handleNotificationClose}
+//       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+//       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+//       PaperProps={{ style: { width: '90vw', maxWidth: '400px', maxHeight: '500px' } }}
+//     >
+//       <div className="p-2">
+//         <div className="flex justify-between items-center px-2 py-1 border-b">
+//           <h3 className="font-bold">Recent Task Notifications</h3>
+//           {unseenNotifications.length > 0 && (
+//             <Button size="small" onClick={clearAllNotifications} color="secondary">
+//               Clear All
+//             </Button>
+//           )}
+//         </div>
+//         {unseenNotifications.length === 0 ? (
+//           <div className="p-4 text-center text-gray-500">No new notifications</div>
+//         ) : (
+//           <List dense>
+//             <AnimatePresence>
+//               {unseenNotifications.map((task) => (
+//                 <motion.div
+//                   key={task.id}
+//                   initial={{ opacity: 0, y: -10 }}
+//                   animate={{ opacity: 1, y: 0 }}
+//                   exit={{ opacity: 0, x: 100 }}
+//                   transition={{ duration: 0.3 }}
+//                 >
+//                   <ListItem button onClick={() => {
+//                     navigate(`/viewemployeetaskdetails/${task.id}`);
+//                     handleNotificationClose();
+//                   }}>
+//                     <ListItemText
+//                       primary={task.title || "New Task"}
+//                       secondary={task.description || "Click to view details"}
+//                       secondaryTypographyProps={{ noWrap: true }}
+//                     />
+//                     <ListItemSecondaryAction>
+//                       <IconButton
+//                         edge="end"
+//                         aria-label="remove"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           removeNotification(task.id);
+//                         }}
+//                       >
+//                         <CloseIcon fontSize="small" />
+//                       </IconButton>
+//                     </ListItemSecondaryAction>
+//                   </ListItem>
+//                 </motion.div>
+//               ))}
+//             </AnimatePresence>
+//           </List>
+//         )}
+//       </div>
+//     </Menu>
+
+//     {/* Task Content */}
+//     {tasks.length === 0 ? (
+//       <div className="text-center py-10">
+//         <p className="text-gray-500">
+//           {searchQuery ? "No tasks found matching your search criteria" : "No tasks found matching your filters"}
+//         </p>
+//         {(startDateRange.startDate || dueDateRange.startDate || searchQuery) && (
+//           <Button
+//             variant="text"
+//             color="primary"
+//             onClick={handleClearFilters}
+//             className="mt-2"
+//           >
+//             Clear all filters
+//           </Button>
+//         )}
+//       </div>
+//     ) : viewMode === 'grid' ? (
+//       <>
+//         {sortedGroupKeys.map((dateKey) => (
+//           <div key={dateKey} className="mb-8">
+//             <h2 className="text-lg font-semibold text-gray-700 mb-4">
+//               Tasks Starting: {formatDate(dateKey)}
+//             </h2>
+//             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+//               {groupedTasks[dateKey].map((task) => (
+//                 <TaskCard
+//                   key={task.id}
+//                   task={task}
+//                   onView={handleViewTask}
+//                   onEdit={handleMenuOpen}
+//                 />
+//               ))}
+//             </div>
+//           </div>
+//         ))}
+//       </>
+//     ) : (
+//       <TaskTable
+//         tasks={tasks}
+//         onView={handleViewTask}
+//         onEdit={handleMenuOpen}
+//       />
+//     )}
+
+//     {/* Status Menu */}
+//     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+//       <MenuItem onClick={() => handleStatusUpdate('PENDING')}>Mark as Pending</MenuItem>
+//       <MenuItem onClick={() => handleStatusUpdate('INPROGRESS')}>Mark as In Progress</MenuItem>
+//       <MenuItem onClick={() => handleStatusUpdate('COMPLETED')}>Mark as Completed</MenuItem>
+//     </Menu>
+
+//     {/* Snackbar */}
+//     <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+//       <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+//         {snackbar.message}
+//       </MuiAlert>
+//     </Snackbar>
+
+//     {/* Welcome Dialog */}
+//     <Dialog open={showWelcomePopup} onClose={() => setShowWelcomePopup(false)}>
+//       <DialogTitle>New Tasks Assigned Today</DialogTitle>
+//       <DialogContent dividers>
+//         {todaysTasks.map((task) => (
+//           <div key={task.id} className="mb-4">
+//             <h3 className="font-semibold">{task.title}</h3>
+//             <p>{task.description}</p>
+//           </div>
+//         ))}
+//       </DialogContent>
+//       <DialogActions>
+//         <Button onClick={() => setShowWelcomePopup(false)} color="primary">Close</Button>
+//       </DialogActions>
+//     </Dialog>
+//   </div>
+// </div>
+
 //     );
 // };
 
-// export default EmployeeDashboard;
+// export default EmployeeDashboard; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -833,6 +840,7 @@ import axios from 'axios';
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+
 import {
     Menu,
     MenuItem,
@@ -867,7 +875,8 @@ import {
     ViewList as ViewListIcon,
     FilterAlt as FilterAltIcon,
     Clear as ClearIcon,
-    Search as SearchIcon
+    Search as SearchIcon,
+    Business as BusinessIcon
 } from '@mui/icons-material';
 import MuiAlert from '@mui/material/Alert';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -933,6 +942,7 @@ const StatusChip = ({ status }) => {
 };
 
 const TaskCard = ({ task, onView, onEdit }) => {
+  const navigate = useNavigate();
     const { isOverdue, isDueToday } = compareDates(task.dueDate);
     const taskIsOverdue = isOverdue && task.taskStatus !== 'COMPLETED';
     const taskIsDueToday = isDueToday && task.taskStatus !== 'COMPLETED';
@@ -966,7 +976,7 @@ const TaskCard = ({ task, onView, onEdit }) => {
                         }`}>
                         {task.title}
                     </h2>
-                    <p className="text-gray-700 mb-3 h-24 overflow-hidden">{task.description}</p>
+                    <p className="text-gray-700 mb-3 h-20 overflow-hidden">{task.description}</p>
 
                     <div className="border-t border-gray-200 my-2"></div>
 
@@ -991,11 +1001,13 @@ const TaskCard = ({ task, onView, onEdit }) => {
                             <span className="text-gray-600">Status:</span>
                             <StatusChip status={task.taskStatus} />
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-gray-600 mr-2">Company:</span>
+                       
+                    </div>
+                     <div className="flex items-center">
+                            <span className="text-gray-600 mr-2">Client Name:</span>
                             <span className="font-semibold">{task.companyName}</span>
                         </div>
-                    </div>
+                    
 
                     <div className="flex justify-end space-x-2 mt-3">
                         <Tooltip title="View Details">
@@ -1122,6 +1134,7 @@ const EmployeeDashboard = () => {
         return localStorage.getItem('viewMode') || 'grid';
     });
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchByClient, setSearchByClient] = useState(false);
 
     // Date range filter states
     const [startDateRange, setStartDateRange] = useState({
@@ -1288,19 +1301,29 @@ const EmployeeDashboard = () => {
         setSearchQuery(query);
     };
 
+    const toggleSearchByClient = () => {
+        setSearchByClient(!searchByClient);
+    };
+
     const applyFilters = () => {
         let filteredTasks = [...allTasks];
 
         // Search filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            filteredTasks = filteredTasks.filter(task =>
-                task.title.toLowerCase().includes(query) ||
-                task.description.toLowerCase().includes(query) ||
-                task.taskStatus.toLowerCase().includes(query) ||
-                task.priority.toLowerCase().includes(query) ||
-                task.companyName.toLowerCase().includes(query)
-            );
+            
+            if (searchByClient) {
+                // Search only by client name
+                filteredTasks = filteredTasks.filter(task => 
+                    (task.companyName || "").toLowerCase().includes(query)
+                );
+            } else {
+                // Search all fields
+                const fields = ["title", "description", "taskStatus", "priority", "companyName"];
+                filteredTasks = filteredTasks.filter(task =>
+                    fields.some(field => (task[field] || "").toLowerCase().includes(query))
+                );
+            }
         }
 
         // Start date range filter
@@ -1341,6 +1364,7 @@ const EmployeeDashboard = () => {
         setStartDateRange({ startDate: null, endDate: null, key: 'selection' });
         setDueDateRange({ startDate: null, endDate: null, key: 'selection' });
         setSearchQuery('');
+        setSearchByClient(false);
         setTasks(allTasks);
     };
 
@@ -1358,7 +1382,7 @@ const EmployeeDashboard = () => {
         if (allTasks.length > 0) {
             applyFilters();
         }
-    }, [startDateRange, dueDateRange, allTasks, searchQuery]);
+    }, [startDateRange, dueDateRange, allTasks, searchQuery, searchByClient]);
 
     if (loading) {
         return (
@@ -1380,28 +1404,44 @@ const EmployeeDashboard = () => {
     const sortedGroupKeys = Object.keys(groupedTasks).sort((a, b) => new Date(a) - new Date(b));
 
     return (
-        <div className="bg-gradient-to-tr from-blue-50 to-blue-100 min-h-screen p-4 md:p-6">
-            <div className="max-w-7xl mx-auto mt-20 bg-gradient-to-tr from-blue-50 to-blue-100">
-                <div className="flex justify-between items-center mb-6">
+        <div className="bg-gradient-to-tr from-blue-50 to-blue-100 min-h-screen p-4 sm:p-6">
+            <div className="max-w-7xl mx-auto mt-16 sm:mt-20 bg-gradient-to-tr from-blue-50 to-blue-100">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
                     <h1 className="text-2xl font-bold text-gray-800">Your Tasks</h1>
 
                     {/* Search and Filter Section */}
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-                        {/* Search Bar */}
-                        <div className="relative flex-grow max-w-md">
+                    <div className="w-full flex flex-col sm:flex-row sm:items-center gap-4">
+                        {/* Search Bar with Client Toggle */}
+                        <div className="relative flex-grow w-full max-w-md">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <SearchIcon className="h-5 w-5 text-gray-400" />
                             </div>
                             <input
                                 type="text"
-                                placeholder="Search tasks..."
+                                placeholder={searchByClient ? "Search by client name..." : "Search tasks..."}
                                 value={searchQuery}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700"
+                                className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700"
                             />
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <Tooltip title={searchByClient ? "Switch to general search" : "Search by client name only"}>
+                                    <IconButton
+                                        size="small"
+                                        onClick={toggleSearchByClient}
+                                        color={searchByClient ? "primary" : "default"}
+                                    >
+                                        <BusinessIcon 
+                                            fontSize="small" 
+                                            className={searchByClient ? "text-blue-600" : "text-gray-500"}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-4 justify-between">
+                        {/* Date Filters */}
+                        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                            {/* Start Date */}
                             <div className="relative">
                                 <button
                                     className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1409,7 +1449,6 @@ const EmployeeDashboard = () => {
                                 >
                                     Start Date: {formatRangeDisplay(startDateRange.startDate, startDateRange.endDate)}
                                 </button>
-
                                 {showStartDatePicker && (
                                     <div className="absolute z-10 mt-2 bg-white shadow-lg rounded-md left-0 max-w-[90vw] overflow-x-auto">
                                         <DateRangePicker
@@ -1423,6 +1462,7 @@ const EmployeeDashboard = () => {
                                 )}
                             </div>
 
+                            {/* Due Date */}
                             <div className="relative">
                                 <button
                                     className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1430,7 +1470,6 @@ const EmployeeDashboard = () => {
                                 >
                                     Due Date: {formatRangeDisplay(dueDateRange.startDate, dueDateRange.endDate)}
                                 </button>
-
                                 {showDueDatePicker && (
                                     <div className="absolute z-10 mt-2 bg-white shadow-lg rounded-md left-0 max-w-[90vw] overflow-x-auto">
                                         <DateRangePicker
@@ -1444,6 +1483,7 @@ const EmployeeDashboard = () => {
                                 )}
                             </div>
 
+                            {/* Clear Filters */}
                             <button
                                 onClick={handleClearFilters}
                                 className="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 rounded"
@@ -1453,24 +1493,16 @@ const EmployeeDashboard = () => {
                         </div>
                     </div>
 
-
-                    <div className="flex items-center">
+                    {/* Grid/List Toggle and Notification */}
+                    <div className="flex items-center gap-2 mt-4 lg:mt-0">
                         <Tooltip title={viewMode === 'grid' ? 'Switch to List View' : 'Switch to Grid View'}>
-                            <IconButton
-                                color="inherit"
-                                onClick={toggleViewMode}
-                                className="mr-2"
-                            >
+                            <IconButton color="inherit" onClick={toggleViewMode}>
                                 {viewMode === 'grid' ? <ViewListIcon /> : <GridViewIcon />}
                             </IconButton>
                         </Tooltip>
 
                         <Tooltip title="Notifications">
-                            <IconButton
-                                color="inherit"
-                                onClick={handleNotificationClick}
-                                className="relative"
-                            >
+                            <IconButton color="inherit" onClick={handleNotificationClick} className="relative">
                                 <Badge
                                     badgeContent={unseenNotifications.length}
                                     color="error"
@@ -1490,44 +1522,26 @@ const EmployeeDashboard = () => {
                     </div>
                 </div>
 
-                {/* Notification Menu */}
+                {/* Notification Dropdown */}
                 <Menu
                     anchorEl={notificationAnchorEl}
                     open={Boolean(notificationAnchorEl)}
                     onClose={handleNotificationClose}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    PaperProps={{
-                        style: {
-                            width: '400px',
-                            maxHeight: '500px',
-                        },
-                    }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    PaperProps={{ style: { width: '90vw', maxWidth: '400px', maxHeight: '500px' } }}
                 >
                     <div className="p-2">
                         <div className="flex justify-between items-center px-2 py-1 border-b">
                             <h3 className="font-bold">Recent Task Notifications</h3>
                             {unseenNotifications.length > 0 && (
-                                <Button
-                                    size="small"
-                                    onClick={clearAllNotifications}
-                                    color="secondary"
-                                >
+                                <Button size="small" onClick={clearAllNotifications} color="secondary">
                                     Clear All
                                 </Button>
                             )}
                         </div>
-
                         {unseenNotifications.length === 0 ? (
-                            <div className="p-4 text-center text-gray-500">
-                                No new notifications
-                            </div>
+                            <div className="p-4 text-center text-gray-500">No new notifications</div>
                         ) : (
                             <List dense>
                                 <AnimatePresence>
@@ -1539,13 +1553,10 @@ const EmployeeDashboard = () => {
                                             exit={{ opacity: 0, x: 100 }}
                                             transition={{ duration: 0.3 }}
                                         >
-                                            <ListItem
-                                                button
-                                                onClick={() => {
-                                                    navigate(`/viewemployeetaskdetails/${task.id}`);
-                                                    handleNotificationClose();
-                                                }}
-                                            >
+                                            <ListItem button onClick={() => {
+                                                navigate(`/viewemployeetaskdetails/${task.id}`);
+                                                handleNotificationClose();
+                                            }}>
                                                 <ListItemText
                                                     primary={task.title || "New Task"}
                                                     secondary={task.description || "Click to view details"}
@@ -1572,12 +1583,29 @@ const EmployeeDashboard = () => {
                     </div>
                 </Menu>
 
+                {/* Client Search Indicator */}
+                {searchByClient && searchQuery && (
+                    <div className="mb-4 flex items-center bg-blue-50 px-4 py-2 rounded-md">
+                        <BusinessIcon className="text-blue-600 mr-2" />
+                        <span className="text-blue-700 font-medium">
+                            Showing tasks for client: <span className="font-bold">{searchQuery}</span>
+                        </span>
+                        <Button 
+                            size="small" 
+                            color="primary" 
+                            onClick={() => setSearchByClient(false)}
+                            className="ml-3"
+                        >
+                            Clear Client Filter
+                        </Button>
+                    </div>
+                )}
+
+                {/* Task Content */}
                 {tasks.length === 0 ? (
                     <div className="text-center py-10">
                         <p className="text-gray-500">
-                            {searchQuery
-                                ? "No tasks found matching your search criteria"
-                                : "No tasks found matching your filters"}
+                            {searchQuery ? "No tasks found matching your search criteria" : "No tasks found matching your filters"}
                         </p>
                         {(startDateRange.startDate || dueDateRange.startDate || searchQuery) && (
                             <Button
@@ -1597,8 +1625,7 @@ const EmployeeDashboard = () => {
                                 <h2 className="text-lg font-semibold text-gray-700 mb-4">
                                     Tasks Starting: {formatDate(dateKey)}
                                 </h2>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {groupedTasks[dateKey].map((task) => (
                                         <TaskCard
                                             key={task.id}
@@ -1618,45 +1645,49 @@ const EmployeeDashboard = () => {
                         onEdit={handleMenuOpen}
                     />
                 )}
+
+                {/* Status Menu */}
+                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+                    <MenuItem onClick={() => handleStatusUpdate('PENDING')}>Mark as Pending</MenuItem>
+                    <MenuItem onClick={() => handleStatusUpdate('INPROGRESS')}>Mark as In Progress</MenuItem>
+                    <MenuItem onClick={() => handleStatusUpdate('COMPLETED')}>Mark as Completed</MenuItem>
+                </Menu>
+
+                {/* Snackbar */}
+                <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+                    <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+                        {snackbar.message}
+                    </MuiAlert>
+                </Snackbar>
+
+                {/* Welcome Dialog */}
+                <Dialog open={showWelcomePopup} onClose={() => setShowWelcomePopup(false)}>
+                    <DialogTitle>New Tasks Assigned Today</DialogTitle>
+                    <DialogContent dividers>
+                        {todaysTasks.map((task) => (
+                            <div key={task.id} className="mb-4">
+                                <h3 className="font-semibold">{task.title}</h3>
+                                <p>{task.description}</p>
+                            </div>
+                        ))}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setShowWelcomePopup(false)} color="primary">Close</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
-
-            {/* Task Status Menu */}
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-            >
-                <MenuItem onClick={() => handleStatusUpdate('PENDING')}>Mark as Pending</MenuItem>
-                <MenuItem onClick={() => handleStatusUpdate('INPROGRESS')}>Mark as In Progress</MenuItem>
-                <MenuItem onClick={() => handleStatusUpdate('COMPLETED')}>Mark as Completed</MenuItem>
-            </Menu>
-
-            {/* Snackbar */}
-            <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar}>
-                <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
-                    {snackbar.message}
-                </MuiAlert>
-            </Snackbar>
-
-            {/* Welcome Popup for Today's Tasks */}
-            <Dialog open={showWelcomePopup} onClose={() => setShowWelcomePopup(false)}>
-                <DialogTitle>New Tasks Assigned Today</DialogTitle>
-                <DialogContent dividers>
-                    {todaysTasks.map((task) => (
-                        <div key={task.id} className="mb-4">
-                            <h3 className="font-semibold">{task.title}</h3>
-                            <p>{task.description}</p>
-                        </div>
-                    ))}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowWelcomePopup(false)} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </div>
     );
 };
 
-export default EmployeeDashboard; 
+export default EmployeeDashboard;
+
+
+
+
+
+
+
+
+
+

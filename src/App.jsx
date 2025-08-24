@@ -30,6 +30,14 @@ import EmployeeDiaryPage from './Pages/Diary/EmployeeDiaryPage'
 import AppPage from './Pages/AppFolderPage/AppPage'
 import EmployeeAppsPage from './Pages/EmployeePages/EmployeeAppPage/EmployeeAppsPage'
 import AutoAttendancePage from './Pages/AutoAttendanceSystemPage/AutoAttendancePage'
+import DashboardEmpPage from './Pages/EmployeePages/DashboardEmpPage'
+import TaskStatusChart from './Components/Admin/TaskStatusChart'
+import DashboardAdmPage from './Pages/AdminPages/DashboardAdmPage'
+import DocumentManagementApp from './Components/AppFolder/Document'
+import PlanningApp from './Components/AppFolder/Planning'
+import EntryGate from './Components/AppFolder/EntryGate'
+
+// import TaskStatusChartemp from './Components/Employee/TaskStatusChartemp'
 function App() {
 
   return (
@@ -45,7 +53,8 @@ function App() {
         <Route path="/oauth2/redirect" element={<OAuthRedirectPage />} />
         <Route path="/attendance" element={<AttendenceCapturePage />} />
         <Route path="/autoattendance" element={<AutoAttendancePage />} />
-
+        <Route path="/taskstatus" element={<TaskStatusChart />} />
+        {/* <Route path="/taskstatusemp" element={<TaskStatusChartemp />} /> */}
 
 
 
@@ -94,6 +103,28 @@ function App() {
           path="/app"
           element={<ProtectedRoute element={AppPage} allowedRoles={['ADMIN']} />}
         />
+  <Route
+          path="/dashboardadm"
+          element={<ProtectedRoute element={DashboardAdmPage} allowedRoles={['ADMIN']} />}
+        />
+
+          <Route
+          path="/documentmanagement"
+          element={<ProtectedRoute element={DocumentManagementApp} allowedRoles={['ADMIN']} />}
+        />
+
+    <Route
+          path="/planning"
+          element={<ProtectedRoute element={PlanningApp} allowedRoles={['ADMIN']} />}
+        />
+
+          <Route
+          path="/entrygate"
+          element={<ProtectedRoute element={EntryGate} allowedRoles={['ADMIN']} />}
+        />
+
+
+
 
 
 
@@ -138,6 +169,11 @@ function App() {
           element={<ProtectedRoute element={EmployeeAppsPage} allowedRoles={['EMPLOYEE']} />}
         />
 
+
+  <Route
+          path="/dashboardemp"
+          element={<ProtectedRoute element={DashboardEmpPage} allowedRoles={['EMPLOYEE']} />}
+        />
       </Routes>
     </>
   )

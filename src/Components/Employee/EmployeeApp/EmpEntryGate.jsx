@@ -244,9 +244,9 @@ const VisitorForm = () => {
           <div className={`bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 hover:shadow-2xl ${fadeInClass}`}>
             <div className="px-6 py-8 sm:p-10">
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-                  Visitor Entry Request
-                </h1>
+            <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-[#00A3E1] to-[#00AEEF]">
+  Visitor Entry Request
+</h1>
                 <p className="mt-3 text-lg text-gray-600 max-w-md mx-auto">
                   Please fill all details to request entry permission
                 </p>
@@ -522,9 +522,9 @@ const VisitorForm = () => {
                     type="submit"
                     disabled={isSubmitting}
                     className={`ml-3 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white ${isSubmitting
-                      ? 'bg-indigo-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
-                      } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-105 duration-300`}
+                      ? 'bg-[#00A3E1] cursor-not-allowed'
+                      : 'bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] hover:from-[#00A3E1] hover:to-[#00AEEF]'
+                      } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00A3E1] transform transition hover:scale-105 duration-300`}
                   >
                     {isSubmitting ? (
                       <>
@@ -543,6 +543,7 @@ const VisitorForm = () => {
                       </>
                     )}
                   </button>
+
                 </div>
               </form>
             </div>
@@ -553,9 +554,10 @@ const VisitorForm = () => {
 
         <div className="mt-12 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Recent Visitor Records
-            </h2>
+        <h2 className="text-2xl font-bold text-gray-900 bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] bg-clip-text text-transparent">
+  Recent Visitor Records
+</h2>
+
 
           </div>
 
