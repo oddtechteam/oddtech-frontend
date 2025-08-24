@@ -36,7 +36,7 @@ const Whatsapp = () => {
         href="https://wa.me/919370209446"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-15 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-green-600 transition-transform transform hover:scale-110 z-50"
+        className="fixed bottom-25 right-6 w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-green-600 transition-transform transform hover:scale-110 z-50"
       >
         <i className="fa fa-whatsapp"></i>
       </a>

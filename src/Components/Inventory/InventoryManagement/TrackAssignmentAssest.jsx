@@ -170,12 +170,12 @@ const TrackAssignmentAssest = () => {
                   </div>
                 </div>
 
-                {/* <button
+                <button
                   onClick={() => navigate(`/inventorymanagement/assets/${asset.id}`)}
                   className="w-full mt-2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   View Details
-                </button> */}
+                </button>
               </div>
             </div>
           ))}

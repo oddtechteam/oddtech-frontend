@@ -24,7 +24,7 @@ const InventoryDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 mt-20 p-6 ">
+    <div className="min-h-screen bg-gray-100 mt-16 p-6">
       {activePage === null ? (
         <>
           <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">

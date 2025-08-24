@@ -92,10 +92,9 @@ const ViewTaskDetails = () => {
     }
 
     return (
-      <div className='bg-gradient-to-tr from-blue-50 to-blue-100'>
-          <div className="container mx-auto px-4 py-8 max-w-4xl bg-white  ">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
             {/* Task Details */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 mt-10">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 mt-20">
                 <div className="p-6">
                     <h2 className="text-2xl font-bold text-blue-600 mb-3">{taskData?.title}</h2>
                     <p className="text-gray-700 mb-4">{taskData?.description}</p>
@@ -183,22 +182,11 @@ const ViewTaskDetails = () => {
                                 <div className="p-4">
                                     <div className="flex items-start mb-2">
                                         <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3 overflow-hidden">
-                                        <img
-  src={`https://i.pravatar.cc/150?u=${comment.postedName}`}
-  alt={`${comment.postedName} avatar`}
-  className="
-    w-12 h-12 
-    rounded-full 
-    border-2 border-white 
-    shadow-md 
-    object-cover 
-    hover:scale-105 
-    hover:shadow-lg 
-    transition-transform 
-    duration-300
-  "
-/>
-
+                                            <img
+                                                src={`https://i.pravatar.cc/150?u=${comment.postedName}`}
+                                                alt="avatar"
+                                                className="w-full h-full object-cover"
+                                            />
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex justify-between items-start">
@@ -239,7 +227,6 @@ const ViewTaskDetails = () => {
                 </div>
             )}
         </div>
-      </div>
     );
 
 };

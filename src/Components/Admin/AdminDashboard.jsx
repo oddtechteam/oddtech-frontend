@@ -1,14 +1,10 @@
 
-
 // import React, { useState, useEffect } from 'react';
 // import { redirect, useNavigate } from 'react-router-dom';
 // import { DateRangePicker } from 'react-date-range';
 // import 'react-date-range/dist/styles.css';
 // import 'react-date-range/dist/theme/default.css';
 // import { SearchIcon } from '@heroicons/react/solid';
-// import Swal from 'sweetalert2';
-// import 'sweetalert2/dist/sweetalert2.min.css';
-
 
 // const API_BASE_URL = 'http://localhost:8080/api/admin';
 
@@ -124,10 +120,7 @@
 
 //   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
 //   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
-
-
 //   const [showCharts, setShowCharts] = useState(false);
-
 
 //   useEffect(() => {
 //     fetchTasks();
@@ -140,10 +133,6 @@
 //   }, [startDateRange, dueDateRange, allTasks, searchQuery]);
 
 //   const getStatusColor = (status) => {
-//     if (!status || typeof status !== 'string') {
-//       return 'bg-gray-100 text-gray-800'; // Default fallback
-//     }
-
 //     switch (status.toLowerCase()) {
 //       case 'completed':
 //         return 'bg-green-100 text-green-800';
@@ -155,7 +144,6 @@
 //         return 'bg-gray-100 text-gray-800';
 //     }
 //   };
-
 
 //   const fetchTasks = async () => {
 //     setIsLoading(true);
@@ -193,6 +181,7 @@
 //           task.title.toLowerCase().includes(term.toLowerCase()) ||
 //           task.description.toLowerCase().includes(term.toLowerCase()) ||
 //           (task.employeeName && task.employeeName.toLowerCase().includes(term.toLowerCase())) ||
+//           task.companyName.toLowerCase().includes(term.toLowerCase()) ||
 //           task.taskStatus.toLowerCase().includes(term.toLowerCase()) ||
 //           task.priority.toLowerCase().includes(term.toLowerCase())
 //         );
@@ -205,6 +194,7 @@
 //         task.title.toLowerCase().includes(term.toLowerCase()) ||
 //         task.description.toLowerCase().includes(term.toLowerCase()) ||
 //         (task.employeeName && task.employeeName.toLowerCase().includes(term.toLowerCase())) ||
+//         task.companyName.toLowerCase().includes(term.toLowerCase()) ||
 //         task.taskStatus.toLowerCase().includes(term.toLowerCase()) ||
 //         task.priority.toLowerCase().includes(term.toLowerCase())
 //       );
@@ -215,40 +205,17 @@
 //     }
 //   };
 
-//   // const handleDelete = async (id) => {
-//   //   if (!window.confirm('Are you sure you want to delete this task?')) return;
-
-//   //   try {
-//   //     await AdminService.deleteTask(id);
-//   //     await fetchTasks();
-//   //     showNotification('Task deleted successfully', 'success');
-//   //   } catch (error) {
-//   //     showNotification('Failed to delete task', 'error');
-//   //   }
-//   // };
-
 //   const handleDelete = async (id) => {
-//     const result = await Swal.fire({
-//       title: 'Delete this task?',
-//       text: "This action cannot be undone.",
-//       icon: 'warning',
-//       showCancelButton: true,
-//       confirmButtonColor: '#d33',
-//       cancelButtonColor: '#3085d6',
-//       confirmButtonText: 'Yes, delete it',
-//     });
-
-//     if (!result.isConfirmed) return;
+//     if (!window.confirm('Are you sure you want to delete this task?')) return;
 
 //     try {
 //       await AdminService.deleteTask(id);
 //       await fetchTasks();
-//       Swal.fire('Deleted!', 'The task was successfully deleted.', 'success');
+//       showNotification('Task deleted successfully', 'success');
 //     } catch (error) {
-//       Swal.fire('Error', 'Failed to delete the task.', 'error');
+//       showNotification('Failed to delete task', 'error');
 //     }
 //   };
-
 
 //   const applyFilters = () => {
 //     let filteredTasks = [...allTasks];
@@ -278,26 +245,17 @@
 //     }
 
 //     // Search filter
-//     // if (searchQuery.trim() !== '') {
-//     //   const term = searchQuery.toLowerCase();
-//     //   filteredTasks = filteredTasks.filter(task =>
-//     //     task.title.toLowerCase().includes(term) ||
-//     //     task.description.toLowerCase().includes(term) ||
-//     //     (task.employeeName && task.employeeName.toLowerCase().includes(term)) ||
-//     //     task.taskStatus.toLowerCase().includes(term) ||
-//     //     task.priority.toLowerCase().includes(term)
-//     //   );
-//     // }
-
 //     if (searchQuery.trim() !== '') {
-//   const term = searchQuery.toLowerCase();
-//   const fields = ['title', 'description', 'employeeName', 'taskStatus', 'priority'];
-
-//   filteredTasks = filteredTasks.filter(task =>
-//     fields.some(field => (task[field] || '').toLowerCase().includes(term))
-//   );
-// }
-
+//       const term = searchQuery.toLowerCase();
+//       filteredTasks = filteredTasks.filter(task =>
+//         task.title.toLowerCase().includes(term) ||
+//         task.description.toLowerCase().includes(term) ||
+//         (task.employeeName && task.employeeName.toLowerCase().includes(term)) ||
+//         task.companyName.toLowerCase().includes(term) ||
+//         task.taskStatus.toLowerCase().includes(term) ||
+//         task.priority.toLowerCase().includes(term)
+//       );
+//     }
 
 //     setTasks(filteredTasks);
 //   };
@@ -350,7 +308,7 @@
 //       )}
 
 //       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4 mt-20 px-2">
-//         <div className="flex justify-between items-center">
+//         <div className="flex items-center">
 //           <h1 className="text-xl font-semibold">All Tasks</h1>
 //           <button
 //             onClick={toggleViewMode}
@@ -367,19 +325,19 @@
 //               </svg>
 //             )}
 //           </button>
-//         </div>
 
-//         <div className="relative flex-grow max-w-md ml-1 md:ml-4">
-//           <div className="absolute inset-y-0 left-0 pl-3 flex items-right pointer-events-none">
-//             <SearchIcon className="h-7 w-5 text-gray-400 pt-3" />
+//           <div className="relative flex-grow max-w-md ml-4">
+//             <div className="absolute inset-y-0 left-0 pl-3 flex items-right pointer-events-none">
+//               <SearchIcon className="h-7 w-5 text-gray-400 pt-3" />
+//             </div>
+//             <input
+//               type="text"
+//               placeholder="Search tasks..."
+//               value={searchQuery}
+//               onChange={handleSearch}
+//               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 placeholder-gray-400 sm:text-sm"
+//             />
 //           </div>
-//           <input
-//             type="text"
-//             placeholder="Search tasks..."
-//             value={searchQuery}
-//             onChange={handleSearch}
-//             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 placeholder-gray-400 sm:text-sm"
-//           />
 //         </div>
 
 //         <div className="flex flex-wrap items-center gap-4 justify-between">
@@ -479,6 +437,11 @@
 //                           </div>
 
 //                           <div className="flex items-center">
+//                             <span className="text-gray-600 mr-2">Company:</span>
+//                             <span className="font-semibold">{task.companyName}</span>
+//                           </div>
+
+//                           <div className="flex items-center">
 //                             <span className="text-gray-600 mr-2">Priority:</span>
 //                             <span className="font-semibold">{task.priority}</span>
 //                           </div>
@@ -535,77 +498,85 @@
 //           </div>
 //         ) : (
 //           <div className="bg-white shadow-md rounded-lg overflow-hidden">
-//             <div className="w-full overflow-x-auto">
-//               <table className="min-w-full divide-y divide-gray-200 text-sm">
-//                 <thead className="bg-gray-50">
-//                   <tr>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-//                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+//             <table className="min-w-full divide-y divide-gray-200">
+//               <thead className="bg-gray-50">
+//                 <tr>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+//                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+//                 </tr>
+//               </thead>
+//               <tbody className="bg-white divide-y divide-gray-200">
+//                 {tasks.map((task) => (
+//                   <tr key={task.id} className="hover:bg-gray-50">
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm font-medium text-blue-600">{task.title}</div>
+//                     </td>
+//                     <td className="px-6 py-4">
+//                       <div className="text-sm text-gray-700 max-w-xs truncate">{task.description}</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm text-gray-700">{task.companyName}</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm text-gray-700">{formatDate(task.startDate)}</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm text-gray-700">{formatDate(task.dueDate)}</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm text-gray-700">{task.employeeName}</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(task.taskStatus)}`}>
+//                         {task.taskStatus}
+//                       </span>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+//                       <div className="flex space-x-2">
+//                         <button
+//                           onClick={() => navigate(`/viewtaskdetails/${task.id}`)}
+//                           className="text-blue-500 hover:text-blue-700"
+//                           aria-label="View"
+//                           disabled={isLoading}
+//                         >
+//                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+//                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+//                           </svg>
+//                         </button>
+//                         <button
+//                           onClick={() => navigate(`/updatetask/${task.id}`)}
+//                           className="text-green-500 hover:text-green-700"
+//                           aria-label="Edit"
+//                           disabled={isLoading}
+//                         >
+//                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+//                           </svg>
+//                         </button>
+//                         <button
+//                           onClick={() => handleDelete(task.id)}
+//                           className="text-red-500 hover:text-red-700"
+//                           aria-label="Delete"
+//                           disabled={isLoading}
+//                         >
+//                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+//                           </svg>
+//                         </button>
+//                       </div>
+//                     </td>
 //                   </tr>
-//                 </thead>
-//                 <tbody className="bg-white divide-y divide-gray-200">
-//                   {tasks.map((task) => (
-//                     <tr key={task.id} className="hover:bg-gray-50">
-//                       <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">{task.title}</td>
-//                       <td className="px-4 py-3 text-gray-700 max-w-xs truncate">{task.description}</td>
-//                       <td className="px-4 py-3 whitespace-nowrap text-gray-700">{formatDate(task.startDate)}</td>
-//                       <td className="px-4 py-3 whitespace-nowrap text-gray-700">{formatDate(task.dueDate)}</td>
-//                       <td className="px-4 py-3 whitespace-nowrap text-gray-700">{task.employeeName}</td>
-//                       <td className="px-4 py-3 whitespace-nowrap">
-//                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(task.taskStatus)}`}>
-//                           {task.taskStatus}
-//                         </span>
-//                       </td>
-//                       <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-//                         <div className="flex space-x-2">
-//                           {/* View */}
-//                           <button
-//                             onClick={() => navigate(`/viewtaskdetails/${task.id}`)}
-//                             className="text-blue-500 hover:text-blue-700"
-//                             aria-label="View"
-//                             disabled={isLoading}
-//                           >
-//                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-//                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-//                             </svg>
-//                           </button>
-//                           {/* Edit */}
-//                           <button
-//                             onClick={() => navigate(`/updatetask/${task.id}`)}
-//                             className="text-green-500 hover:text-green-700"
-//                             aria-label="Edit"
-//                             disabled={isLoading}
-//                           >
-//                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-//                             </svg>
-//                           </button>
-//                           {/* Delete */}
-//                           <button
-//                             onClick={() => handleDelete(task.id)}
-//                             className="text-red-500 hover:text-red-700"
-//                             aria-label="Delete"
-//                             disabled={isLoading}
-//                           >
-//                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-//                             </svg>
-//                           </button>
-//                         </div>
-//                       </td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </table>
-//             </div>
+//                 ))}
+//               </tbody>
+//             </table>
 //           </div>
-
 //         )}
 //       </div>
 //     </div>
@@ -615,27 +586,15 @@
 // export default AdminDashboard;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import { SearchIcon, OfficeBuildingIcon } from '@heroicons/react/solid';
+import { SearchIcon } from '@heroicons/react/solid';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+
 
 const API_BASE_URL = 'http://localhost:8080/api/admin';
 
@@ -751,36 +710,24 @@ const AdminDashboard = () => {
 
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
-  
-  // Client filter state
-  const [clientFilter, setClientFilter] = useState(null);
-  const [showClientDropdown, setShowClientDropdown] = useState(false);
-  const [uniqueClients, setUniqueClients] = useState([]);
+
 
   const [showCharts, setShowCharts] = useState(false);
+
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  // Extract unique clients when tasks are fetched
-  useEffect(() => {
-    if (allTasks.length > 0) {
-      const clients = [...new Set(allTasks.map(task => task.companyName).filter(Boolean))];
-      setUniqueClients(clients);
-      applyFilters();
-    }
-  }, [allTasks]);
-
   useEffect(() => {
     if (allTasks.length > 0) {
       applyFilters();
     }
-  }, [startDateRange, dueDateRange, searchQuery, clientFilter]);
+  }, [startDateRange, dueDateRange, allTasks, searchQuery]);
 
   const getStatusColor = (status) => {
     if (!status || typeof status !== 'string') {
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800'; // Default fallback
     }
 
     switch (status.toLowerCase()) {
@@ -794,6 +741,7 @@ const AdminDashboard = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
 
   const fetchTasks = async () => {
     setIsLoading(true);
@@ -832,8 +780,7 @@ const AdminDashboard = () => {
           task.description.toLowerCase().includes(term.toLowerCase()) ||
           (task.employeeName && task.employeeName.toLowerCase().includes(term.toLowerCase())) ||
           task.taskStatus.toLowerCase().includes(term.toLowerCase()) ||
-          task.priority.toLowerCase().includes(term.toLowerCase()) ||
-          (task.companyName && task.companyName.toLowerCase().includes(term.toLowerCase()))
+          task.priority.toLowerCase().includes(term.toLowerCase())
         );
         setTasks(filtered);
       } else {
@@ -845,8 +792,7 @@ const AdminDashboard = () => {
         task.description.toLowerCase().includes(term.toLowerCase()) ||
         (task.employeeName && task.employeeName.toLowerCase().includes(term.toLowerCase())) ||
         task.taskStatus.toLowerCase().includes(term.toLowerCase()) ||
-        task.priority.toLowerCase().includes(term.toLowerCase()) ||
-        (task.companyName && task.companyName.toLowerCase().includes(term.toLowerCase()))
+        task.priority.toLowerCase().includes(term.toLowerCase())
       );
       setTasks(filtered);
       showNotification('Search failed, using local results', 'warning');
@@ -854,6 +800,18 @@ const AdminDashboard = () => {
       setIsLoading(false);
     }
   };
+
+  // const handleDelete = async (id) => {
+  //   if (!window.confirm('Are you sure you want to delete this task?')) return;
+
+  //   try {
+  //     await AdminService.deleteTask(id);
+  //     await fetchTasks();
+  //     showNotification('Task deleted successfully', 'success');
+  //   } catch (error) {
+  //     showNotification('Failed to delete task', 'error');
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -876,6 +834,7 @@ const AdminDashboard = () => {
       Swal.fire('Error', 'Failed to delete the task.', 'error');
     }
   };
+
 
   const applyFilters = () => {
     let filteredTasks = [...allTasks];
@@ -904,20 +863,15 @@ const AdminDashboard = () => {
       });
     }
 
-    // Client filter
-    if (clientFilter) {
-      filteredTasks = filteredTasks.filter(task => 
-        task.companyName === clientFilter
-      );
-    }
-
     // Search filter
     if (searchQuery.trim() !== '') {
       const term = searchQuery.toLowerCase();
-      const fields = ['title', 'description', 'employeeName', 'taskStatus', 'priority', 'companyName'];
-
       filteredTasks = filteredTasks.filter(task =>
-        fields.some(field => (task[field] || '').toLowerCase().includes(term))
+        task.title.toLowerCase().includes(term) ||
+        task.description.toLowerCase().includes(term) ||
+        (task.employeeName && task.employeeName.toLowerCase().includes(term)) ||
+        task.taskStatus.toLowerCase().includes(term) ||
+        task.priority.toLowerCase().includes(term)
       );
     }
 
@@ -941,23 +895,11 @@ const AdminDashboard = () => {
     setStartDateRange({ startDate: null, endDate: null, key: 'selection' });
     setDueDateRange({ startDate: null, endDate: null, key: 'selection' });
     setSearchQuery('');
-    setClientFilter(null);
     setTasks(allTasks);
   };
 
   const toggleViewMode = () => {
     setViewMode(viewMode === 'grid' ? 'list' : 'grid');
-  };
-
-  // Handle client selection
-  const handleClientSelect = (client) => {
-    setClientFilter(client);
-    setShowClientDropdown(false);
-  };
-
-  // Clear client filter
-  const clearClientFilter = () => {
-    setClientFilter(null);
   };
 
   const groupedTasks = tasks.reduce((groups, task) => {
@@ -1003,7 +945,7 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        <div className="relative flex-grow max-w-md ml-1 md:ml-4">
+        <div className="relative flex-grow max-w-md ml-4">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-right pointer-events-none">
             <SearchIcon className="h-7 w-5 text-gray-400 pt-3" />
           </div>
@@ -1012,42 +954,11 @@ const AdminDashboard = () => {
             placeholder="Search tasks..."
             value={searchQuery}
             onChange={handleSearch}
-            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 placeholder-gray-400 sm:text-sm"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 placeholder-gray-400 sm:text-sm"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-4 justify-between">
-          {/* Client Filter Button */}
-          <div className="relative">
-            <button
-              className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center"
-              onClick={() => setShowClientDropdown(!showClientDropdown)}
-            >
-              <OfficeBuildingIcon className="h-5 w-5 mr-2" />
-              {clientFilter ? clientFilter : 'Filter by Client'}
-            </button>
-            
-            {showClientDropdown && (
-              <div className="absolute z-20 mt-1 w-full bg-white shadow-lg rounded-md max-h-60 overflow-auto">
-                <button
-                  className={`block w-full text-left px-4 py-2 text-sm ${!clientFilter ? 'bg-blue-100 font-medium' : 'hover:bg-gray-100'}`}
-                  onClick={() => handleClientSelect(null)}
-                >
-                  All Clients
-                </button>
-                {uniqueClients.map(client => (
-                  <button
-                    key={client}
-                    className={`block w-full text-left px-4 py-2 text-sm ${clientFilter === client ? 'bg-blue-100 font-medium' : 'hover:bg-gray-100'}`}
-                    onClick={() => handleClientSelect(client)}
-                  >
-                    {client}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
           <div className="relative">
             <button
               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1099,22 +1010,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Client Filter Indicator */}
-      {clientFilter && (
-        <div className="flex items-center px-4 py-2 bg-blue-50 rounded-md mb-4 mx-2">
-          <span className="font-medium">Showing tasks for client: {clientFilter}</span>
-          <button 
-            onClick={clearClientFilter}
-            className="ml-2 text-blue-600 hover:text-blue-800 flex items-center"
-          >
-            <span>Clear</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-          </button>
-        </div>
-      )}
-
       <div className="mt-8 px-2">
         {isLoading ? (
           <div className="text-center py-10">
@@ -1162,11 +1057,6 @@ const AdminDashboard = () => {
                           <div className="flex items-center">
                             <span className="text-gray-600 mr-2">Priority:</span>
                             <span className="font-semibold">{task.priority}</span>
-                          </div>
-
-                          <div className="flex items-center">
-                            <span className="text-gray-600 mr-2">Client Name:</span>
-                            <span className="font-semibold">{task.companyName || 'N/A'}</span>
                           </div>
 
                           <div className="flex items-center">
@@ -1227,7 +1117,6 @@ const AdminDashboard = () => {
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
@@ -1240,7 +1129,6 @@ const AdminDashboard = () => {
                     <tr key={task.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">{task.title}</td>
                       <td className="px-4 py-3 text-gray-700 max-w-xs truncate">{task.description}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-gray-700">{task.companyName || 'N/A'}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-gray-700">{formatDate(task.startDate)}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-gray-700">{formatDate(task.dueDate)}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-gray-700">{task.employeeName}</td>
@@ -1251,6 +1139,7 @@ const AdminDashboard = () => {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex space-x-2">
+                          {/* View */}
                           <button
                             onClick={() => navigate(`/viewtaskdetails/${task.id}`)}
                             className="text-blue-500 hover:text-blue-700"
@@ -1262,6 +1151,7 @@ const AdminDashboard = () => {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                           </button>
+                          {/* Edit */}
                           <button
                             onClick={() => navigate(`/updatetask/${task.id}`)}
                             className="text-green-500 hover:text-green-700"
@@ -1272,6 +1162,7 @@ const AdminDashboard = () => {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                           </button>
+                          {/* Delete */}
                           <button
                             onClick={() => handleDelete(task.id)}
                             className="text-red-500 hover:text-red-700"
@@ -1290,6 +1181,7 @@ const AdminDashboard = () => {
               </table>
             </div>
           </div>
+
         )}
       </div>
     </div>
@@ -1297,7 +1189,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
-
-
-

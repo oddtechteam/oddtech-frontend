@@ -170,11 +170,10 @@ const RequestNewAsset = () => {
       </div>
 
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-    <div className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] p-6">
-  <h2 className="text-xl font-bold text-white">Asset Request Form</h2>
-  <p className="text-blue-100">Complete all required fields below</p>
-</div>
-
+        <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
+          <h2 className="text-xl font-bold text-white">Asset Request Form</h2>
+          <p className="text-blue-100">Complete all required fields below</p>
+        </div>
 
         <div className="p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -379,7 +378,7 @@ const RequestNewAsset = () => {
             </div>
 
             <div className="flex justify-end pt-4">
-              {/* <button
+              <button
                 type="submit"
                 className="relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform hover:-translate-y-0.5"
               >
@@ -387,18 +386,7 @@ const RequestNewAsset = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 Submit Request
-              </button> */}
-
-              <button
-  type="submit"
-  className="relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:from-[#0096cc] hover:to-[#009ed5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00A3E1] transform hover:-translate-y-0.5"
->
-  <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-  </svg>
-  Submit Request
-</button>
-
+              </button>
             </div>
           </form>
         </div>

@@ -81,14 +81,13 @@ const Navbar = () => {
   const guestLinks = [
     { name: 'Home', path: '/home' },
     { name: 'AboutUs', path: '/aboutus' },
-    { name: 'Attendance', path: '/autoattendance' },
+    { name: 'Auto Attendance', path: '/autoattendance' },
     { name: 'ContactUs', path: '/contactus' },
     { name: 'Login', path: '/loginpage' },
   ];
 
   const adminLinks = [
-     { name: 'Dashboard', path: '/dashboardadm' },
-    { name: 'Tasks', path: '/admindashboard' },
+    { name: 'Dashboard', path: '/admindashboard' },
     { name: 'Apps', path: '/app' },
     { name: 'Assign Task', path: '/posttask' },
     { name: 'HRMS', path: '/hrmsadmin' },
@@ -97,8 +96,7 @@ const Navbar = () => {
   ];
 
   const employeeLinks = [
-     { name: 'Dashboard', path: '/dashboardemp' },
-    { name: 'Tasks', path: '/employeedashboard' },
+    { name: 'Dashboard', path: '/employeedashboard' },
     { name: 'Apps', path: '/employeeapps' },
     { name: 'HRMS', path: '/hrmsemployee' },
     { name: 'Inventory Management', path: '/inventoryemployee' }
