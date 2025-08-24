@@ -10,7 +10,10 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 
-const API_BASE_URL = 'http://localhost:8080/api/admin';
+// const API_BASE_URL = 'http://localhost:8080/api/admin';
+
+export const API_BASE_URL = HOST ? `${HOST}/api/admin` : '/api/admin';
+
 
 const AdminService = {
   getTasks: async () => {
