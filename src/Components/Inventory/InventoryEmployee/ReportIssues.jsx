@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
+  baseURL: 'http://localhost:8080/api',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -26,34 +26,50 @@ const ReportIssues = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const userData = JSON.parse(localStorage.getItem('user'));
-        setUser(userData);
+const fetchData = async () => {
+  try {
+    setIsLoading(true);
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setUser(userData);
 
-        const response = await api.get(`/assignments/employee/${userData.id}`);
-        const assignedAssets = response.data.map(assignment => ({
-          id: assignment.asset?.id || assignment.assetId,
-          name: assignment.asset?.name || 'Unnamed Asset',
-          productId: assignment.asset?.productId || 'N/A'
-        }));
-        setAssets(assignedAssets);
+    const response = await api.get(`/assignments/employee/${userData.id}`);
+    // Ensure the response data contains assets properly
+    const assignedAssets = response.data.map(assignment => ({
+      id: assignment.asset?.id || assignment.assetId,
+      name: assignment.asset?.name || 'Unnamed Asset',
+      productId: assignment.asset?.productId || 'N/A'
+    }));
+    setAssets(assignedAssets);
 
-      } catch (error) {
-        console.error('Error loading assets:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to load your assigned assets',
-          icon: 'error'
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  } catch (error) {
+    console.error('Full error:', error);
+    console.error('Error response:', error.response?.data);
+
+    let errorMessage = 'Failed to submit issue';
+    if (error.response) {
+      errorMessage = error.response.data?.message ||
+                    error.response.statusText ||
+                    'Server error occurred';
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to load your assigned assets',
+      icon: 'error'
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log("Assets:", assets);
+  }, [assets]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,11 +94,11 @@ const ReportIssues = () => {
         description: formData.description,
         stepsToReproduce: formData.stepsToReproduce,
         priority: formData.priority.toUpperCase(),
-        status: 'OPEN',
-        reportedById: user.id
+        status: 'OPEN', // Default status when creating a new issue
+        reportedById: user.id // The user who is reporting the issue
       };
 
-      await api.post('/issues', issueData);
+      const response = await api.post('/issues', issueData);
       setSubmitted(true);
       Swal.fire({
         title: 'Success',
@@ -92,9 +108,15 @@ const ReportIssues = () => {
     } catch (error) {
       let errorMessage = 'Failed to submit issue';
       if (error.response) {
-        errorMessage = error.response.data?.message ||
-                      error.response.statusText ||
-                      'Server error occurred';
+        if (error.response.data && typeof error.response.data === 'object') {
+          errorMessage = error.response.data.message ||
+                        error.response.data.error ||
+                        'Server error occurred';
+        } else {
+          errorMessage = error.response.data ||
+                        error.response.statusText ||
+                        'Server error occurred';
+        }
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -180,9 +202,9 @@ const ReportIssues = () => {
       </div>
 
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] px-6 py-4">
-          <h2 className="text-xl font-bold text-white">Issue Report Form</h2>
-        </div>
+     <div className="bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] px-6 py-4">
+  <h2 className="text-xl font-bold text-white">Issue Report Form</h2>
+</div>
 
         <div className="px-4 py-5 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -383,7 +405,31 @@ const ReportIssues = () => {
             </div>
 
             <div className="flex justify-end">
-              <button
+              {/* <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`ml-3 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform ${
+                  isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-0.5'
+                }`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <svg className="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Report Issue
+                  </>
+                )}
+              </button> */}
+                  <button
                 type="submit"
                 disabled={isSubmitting}
                 className={`ml-3 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-[#00A3E1] to-[#00AEEF] hover:from-[#0095d6] hover:to-[#009bd7] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00A3E1] transition-all duration-300 transform ${
@@ -407,6 +453,7 @@ const ReportIssues = () => {
                   </>
                 )}
               </button>
+
             </div>
           </form>
         </div>

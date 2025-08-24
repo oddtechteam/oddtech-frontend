@@ -4,9 +4,10 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
+  baseURL: 'http://localhost:8080/api',
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
   }
 });
 
@@ -17,22 +18,17 @@ const ViewAssetIssues = () => {
   const [resolution, setResolution] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Add authorization header to requests
-  api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
-
   useEffect(() => {
     fetchIssues();
   }, []);
 
   const fetchIssues = async () => {
       try {
-          const response = await api.get('/issues/open');
+          const response = await api.get('/issues/open', {
+                      headers: {
+                          'Authorization': `Bearer ${localStorage.getItem('token')}`
+                      }
+                  });
           setIssues(response.data.map(issue => ({
               id: issue.id,
               asset: issue.asset?.name || 'Unknown Asset',
@@ -47,10 +43,12 @@ const ViewAssetIssues = () => {
               stepsToReproduce: issue.stepsToReproduce,
               resolution: issue.resolution
           })));
+            console.log(response.data)
       } catch (error) {
           console.error('Error fetching issues:', error);
       }
   };
+
   const handleSelectIssue = (issue) => {
     setSelectedIssue(issue);
     setStatus(issue.status);

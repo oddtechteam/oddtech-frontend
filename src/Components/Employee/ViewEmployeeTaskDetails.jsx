@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -16,7 +18,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = 'http://localhost:8080/api/employee';
+const api = axios.create({
+    baseURL: 'http://localhost:8080/api',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+});
 
 const ViewTaskDetails = () => {
     const { id } = useParams();
@@ -65,7 +74,7 @@ const ViewTaskDetails = () => {
     const fetchTaskDetails = async () => {
         try {
             console.log('Fetching task details for ID:', taskId);
-            const response = await axios.get(`${API_BASE_URL}/api/employee/task/${taskId}`, {
+            const response = await axios.get(`${API_BASE_URL}/task/${taskId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -82,7 +91,7 @@ const ViewTaskDetails = () => {
 
     const fetchComments = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/employee/task/${taskId}/comments`, {
+            const response = await axios.get(`${API_BASE_URL}/task/${taskId}/comments`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -102,13 +111,9 @@ const ViewTaskDetails = () => {
 
         setIsTranslating(true);
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/employee/translate`, {
+            const response = await api.post(`employee/translate`, {
                 text: taskData.description,
                 targetLang: langCode
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
             });
 
             setTranslatedDescription(response.data.translatedText || response.data);
@@ -155,14 +160,11 @@ const ViewTaskDetails = () => {
             const content = data.content;
             console.log('Publishing comment:', content);
 
-            const url = `${API_BASE_URL}/api/employee/task/comment?taskId=${taskId}&postedBy=${userId}`;
+            const url = ` ${API_BASE_URL}/task/comment?taskId=${taskId}&postedBy=${userId}`;
             console.log('Posting comment to:', url);
 
             const response = await axios.post(url, content, {
-                headers: { 
-                    'Content-Type': 'text/plain',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                headers: { 'Content-Type': 'text/plain' }
             });
 
             console.log('Comment posted:', response.data);

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Swal from 'sweetalert2';
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
+  baseURL: 'http://localhost:8080/api',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -20,46 +20,51 @@ const ViewAssignedAssets = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [returningAssets, setReturningAssets] = useState({});
 
+  // Get user data from localStorage
   const userData = JSON.parse(localStorage.getItem('user'));
   const employeeId = userData?.id;
+  console.log(employeeId)
 
-  useEffect(() => {
-    const fetchAssignedAssets = async () => {
-      try {
-        setLoading(true);
-        if (!employeeId) {
-          throw new Error('Employee ID not found in user data');
-        }
+ useEffect(() => {
+   const fetchAssignedAssets = async () => {
+     try {
+       setLoading(true);
+       if (!employeeId) {
+         throw new Error('Employee ID not found in user data');
+       }
 
-        const response = await api.get(`/assignments/employee/${employeeId}`);
-        const assignmentsWithAssets = response.data.map(assignment => {
-          if (!assignment.asset) {
-            console.warn('Assignment missing asset data:', assignment);
-          }
-          return assignment;
-        });
+       const response = await api.get(`/assignments/employee/${employeeId}`);
+       console.log('API Response:', response.data); // Debug log
 
-        setAssets(assignmentsWithAssets);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError(err.response?.data?.message || err.message || 'Failed to fetch assets');
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to load your assigned assets',
-          icon: 'error'
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+       // Verify asset data exists
+       const assignmentsWithAssets = response.data.map(assignment => {
+         if (!assignment.asset) {
+           console.warn('Assignment missing asset data:', assignment);
+         }
+         return assignment;
+       });
 
-    if (employeeId) {
-      fetchAssignedAssets();
-    } else {
-      setError('Employee information not available');
-      setLoading(false);
-    }
-  }, [employeeId]);
+       setAssets(assignmentsWithAssets);
+     } catch (err) {
+       console.error('Error fetching data:', err);
+       setError(err.response?.data?.message || err.message || 'Failed to fetch assets');
+       Swal.fire({
+         title: 'Error',
+         text: 'Failed to load your assigned assets',
+         icon: 'error'
+       });
+     } finally {
+       setLoading(false);
+     }
+   };
+
+   if (employeeId) {
+     fetchAssignedAssets();
+   } else {
+     setError('Employee information not available');
+     setLoading(false);
+   }
+ }, [employeeId]);
 
   const toggleExpand = (id) => {
     setExpandedAsset(expandedAsset === id ? null : id);

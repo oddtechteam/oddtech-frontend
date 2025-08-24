@@ -1,7 +1,112 @@
-import { useState, useEffect } from 'react';
+// import React, { useState } from 'react';
 
-// Get base URL from .env
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// const EmployeeDiary = () => {
+//     const [entries, setEntries] = useState([
+//         {
+//             id: 1,
+//             title: 'Daily Standup',
+//             content: 'Attended team standup, discussed blockers on login API.',
+//             date: new Date().toLocaleString(),
+//         },
+//         {
+//             id: 2,
+//             title: 'Bug Fixing',
+//             content: 'Resolved the dashboard rendering issue in the HRMS project.',
+//             date: new Date().toLocaleString(),
+//         },
+//     ]);
+
+//     const [title, setTitle] = useState('');
+//     const [content, setContent] = useState('');
+
+//     // Add new diary entry
+//     const handleSubmit = (e) => {
+//         e.preventDefault();
+//         if (!title || !content) return;
+
+//         const newEntry = {
+//             id: Date.now(),
+//             title,
+//             content,
+//             date: new Date().toLocaleString(),
+//         };
+
+//         setEntries([newEntry, ...entries]);
+//         setTitle('');
+//         setContent('');
+//     };
+
+//     // Delete diary entry
+//     const handleDelete = (id) => {
+//         const filtered = entries.filter((entry) => entry.id !== id);
+//         setEntries(filtered);
+//     };
+
+//     return (
+//         <div className="max-w-3xl mx-auto p-4">
+//             <h2 className="text-3xl font-bold mb-4">📘 My Diary</h2>
+
+//             {/* Add Entry Form */}
+//             <form onSubmit={handleSubmit} className="mb-6">
+//                 <input
+//                     type="text"
+//                     placeholder="Title"
+//                     className="border border-gray-300 p-2 rounded w-full mb-2"
+//                     value={title}
+//                     onChange={(e) => setTitle(e.target.value)}
+//                     required
+//                 />
+//                 <textarea
+//                     placeholder="What's on your mind?"
+//                     className="border border-gray-300 p-2 rounded w-full mb-2"
+//                     rows="4"
+//                     value={content}
+//                     onChange={(e) => setContent(e.target.value)}
+//                     required
+//                 />
+//                 <button
+//                     type="submit"
+//                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+//                 >
+//                     Add Entry
+//                 </button>
+//             </form>
+
+//             {/* Display Entries */}
+//             <h3 className="text-xl font-semibold mb-3">📜 Previous Entries</h3>
+//             {entries.length === 0 ? (
+//                 <p>No diary entries found.</p>
+//             ) : (
+//                 entries.map((entry) => (
+//                     <div
+//                         key={entry.id}
+//                         className="bg-white shadow-md border p-4 rounded mb-4"
+//                     >
+//                         <div className="flex justify-between items-center">
+//                             <h4 className="text-lg font-bold">{entry.title}</h4>
+//                             <button
+//                                 onClick={() => handleDelete(entry.id)}
+//                                 className="text-red-500 hover:underline text-sm"
+//                             >
+//                                 Delete
+//                             </button>
+//                         </div>
+//                         <p className="text-sm text-gray-500 mb-2">{entry.date}</p>
+//                         <p>{entry.content}</p>
+//                     </div>
+//                 ))
+//             )}
+//         </div>
+//     );
+// };
+
+// export default EmployeeDiary;
+
+
+
+
+
+import { useState, useEffect } from 'react';
 
 const EmployeeDiary = () => {
     const [entries, setEntries] = useState([]);
@@ -9,6 +114,7 @@ const EmployeeDiary = () => {
     const [currentEntry, setCurrentEntry] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Mood icons mapping
     const moodIcons = {
         happy: '😊',
         neutral: '😐',
@@ -17,61 +123,64 @@ const EmployeeDiary = () => {
         excited: '😃'
     };
 
-    // Fetch diary entries from API
+    // Mock data - replace with API calls later
     useEffect(() => {
         const fetchEntries = async () => {
-            try {
-                const response = await fetch(`${API_BASE_URL}/diary`);
-                if (!response.ok) throw new Error('Failed to fetch diary entries');
-                const data = await response.json();
-                setEntries(data);
+            // Mock data
+            setTimeout(() => {
+                setEntries([
+                    {
+                        id: 1,
+                        date: '2023-05-15',
+                        title: 'Project Kickoff',
+                        content: 'Started work on the new client project. Team seems excited about the challenge!',
+                        mood: 'happy',
+                        tags: ['work', 'project']
+                    },
+                    {
+                        id: 2,
+                        date: '2023-05-16',
+                        title: 'Design Review',
+                        content: 'Presented initial designs to the team. Got some great feedback to iterate on.',
+                        mood: 'neutral',
+                        tags: ['design', 'meeting']
+                    },
+                    {
+                        id: 3,
+                        date: '2023-05-17',
+                        title: 'Code Refactoring',
+                        content: 'Spent the day cleaning up legacy code. Not glamorous but necessary work.',
+                        mood: 'tired',
+                        tags: ['coding', 'refactor']
+                    }
+                ]);
                 setIsLoading(false);
-            } catch (error) {
-                console.error(error);
-                setIsLoading(false);
-            }
+            }, 500);
         };
+
         fetchEntries();
     }, []);
 
-    const handleAddEntry = async (entry) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/diary`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(entry)
-            });
-            const newEntry = await response.json();
-            setEntries([newEntry, ...entries]);
-            setIsFormOpen(false);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleAddEntry = (entry) => {
+        const newEntry = {
+            ...entry,
+            id: entries.length > 0 ? Math.max(...entries.map(e => e.id)) + 1 : 1,
+            date: new Date().toISOString().split('T')[0]
+        };
+        setEntries([newEntry, ...entries]);
+        setIsFormOpen(false);
     };
 
-    const handleUpdateEntry = async (updatedEntry) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/diary/${updatedEntry.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedEntry)
-            });
-            const data = await response.json();
-            setEntries(entries.map(e => e.id === data.id ? data : e));
-            setIsFormOpen(false);
-            setCurrentEntry(null);
-        } catch (error) {
-            console.error(error);
-        }
+    const handleUpdateEntry = (updatedEntry) => {
+        setEntries(entries.map(entry =>
+            entry.id === updatedEntry.id ? updatedEntry : entry
+        ));
+        setIsFormOpen(false);
+        setCurrentEntry(null);
     };
 
-    const handleDeleteEntry = async (id) => {
-        try {
-            await fetch(`${API_BASE_URL}/diary/${id}`, { method: 'DELETE' });
-            setEntries(entries.filter(e => e.id !== id));
-        } catch (error) {
-            console.error(error);
-        }
+    const handleDeleteEntry = (id) => {
+        setEntries(entries.filter(entry => entry.id !== id));
     };
 
     // Stats calculation
@@ -100,7 +209,14 @@ const EmployeeDiary = () => {
         const [newTag, setNewTag] = useState('');
 
         useEffect(() => {
-            if (entry) setFormData({ ...entry });
+            if (entry) {
+                setFormData({
+                    title: entry.title,
+                    content: entry.content,
+                    mood: entry.mood,
+                    tags: [...entry.tags]
+                });
+            }
         }, [entry]);
 
         const handleChange = (e) => {
@@ -110,13 +226,19 @@ const EmployeeDiary = () => {
 
         const handleAddTag = () => {
             if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
-                setFormData(prev => ({ ...prev, tags: [...prev.tags, newTag.trim()] }));
+                setFormData(prev => ({
+                    ...prev,
+                    tags: [...prev.tags, newTag.trim()]
+                }));
                 setNewTag('');
             }
         };
 
-        const handleRemoveTag = (tag) => {
-            setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
+        const handleRemoveTag = (tagToRemove) => {
+            setFormData(prev => ({
+                ...prev,
+                tags: prev.tags.filter(tag => tag !== tagToRemove)
+            }));
         };
 
         const handleSubmit = (e) => {

@@ -6,8 +6,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Use API base URL from .env
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + '/api/admin';
+const API_BASE_URL = 'http://localhost:8080/api/admin';
 
 const TaskStatusChart = () => {
   const [statusCounts, setStatusCounts] = useState({ pending: 0, progress: 0, completed: 0 });
@@ -29,7 +28,11 @@ const TaskStatusChart = () => {
 
       const data = await response.json();
 
-      const counts = { pending: 0, progress: 0, completed: 0 };
+      const counts = {
+        pending: 0,
+        progress: 0,
+        completed: 0
+      };
 
       data.forEach(task => {
         const status = task.taskStatus?.toLowerCase();

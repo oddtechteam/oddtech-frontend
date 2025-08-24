@@ -4,6 +4,9 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+// Set axios base URL
+axios.defaults.baseURL = "http://localhost:8080";
+
 const UpdateStatusAsset = () => {
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState('');
@@ -12,9 +15,6 @@ const UpdateStatusAsset = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  // Get API base URL from environment variables
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Get auth token from localStorage
   const getAuthHeader = () => {
@@ -31,7 +31,7 @@ const UpdateStatusAsset = () => {
   const fetchAssets = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/api/assets`, getAuthHeader());
+      const response = await axios.get("/api/assets", getAuthHeader());
       setAssets(response.data);
     } catch (error) {
       console.error("Error fetching assets:", error);
@@ -60,8 +60,8 @@ const UpdateStatusAsset = () => {
     try {
       // Call backend API to update status
       await axios.put(
-        `${API_BASE_URL}/api/assignments/${selectedAsset}/condition?condition=${newStatus}`,
-        { notes: notes || "Status change reason" },
+        `/api/assignments/${selectedAsset}/condition?condition=${newStatus}`,
+        { notes: "Status change reason" },
         getAuthHeader()
       );
 
@@ -233,64 +233,64 @@ const UpdateStatusAsset = () => {
         </motion.div>
 
         <motion.div
-          className="bg-white rounded-xl shadow-lg p-6"
-          whileHover={{ y: -5 }}
-          transition={{ duration: 0.3 }}
-        >
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Status Legend</h3>
+                  className="bg-white rounded-xl shadow-lg p-6"
+                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Status Legend</h3>
 
-          <div className="space-y-4 mb-6">
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-green-500 mr-3"></div>
-              <div>
-                <h4 className="font-medium">Available</h4>
-                <p className="text-sm text-gray-600">Asset is ready for assignment</p>
-              </div>
-            </div>
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full bg-green-500 mr-3"></div>
+                      <div>
+                        <h4 className="font-medium">Available</h4>
+                        <p className="text-sm text-gray-600">Asset is ready for assignment</p>
+                      </div>
+                    </div>
 
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-blue-500 mr-3"></div>
-              <div>
-                <h4 className="font-medium">Assigned</h4>
-                <p className="text-sm text-gray-600">Asset is currently assigned to an employee</p>
-              </div>
-            </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full bg-blue-500 mr-3"></div>
+                      <div>
+                        <h4 className="font-medium">Assigned</h4>
+                        <p className="text-sm text-gray-600">Asset is currently assigned to an employee</p>
+                      </div>
+                    </div>
 
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-yellow-500 mr-3"></div>
-              <div>
-                <h4 className="font-medium">Under Maintenance</h4>
-                <p className="text-sm text-gray-600">Asset is being repaired or serviced</p>
-              </div>
-            </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full bg-yellow-500 mr-3"></div>
+                      <div>
+                        <h4 className="font-medium">Under Maintenance</h4>
+                        <p className="text-sm text-gray-600">Asset is being repaired or serviced</p>
+                      </div>
+                    </div>
 
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-red-500 mr-3"></div>
-              <div>
-                <h4 className="font-medium">Damaged</h4>
-                <p className="text-sm text-gray-600">Asset is damaged and not usable</p>
-              </div>
-            </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full bg-red-500 mr-3"></div>
+                      <div>
+                        <h4 className="font-medium">Damaged</h4>
+                        <p className="text-sm text-gray-600">Asset is damaged and not usable</p>
+                      </div>
+                    </div>
 
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-gray-500 mr-3"></div>
-              <div>
-                <h4 className="font-medium">Lost</h4>
-                <p className="text-sm text-gray-600">Asset cannot be located</p>
-              </div>
-            </div>
-          </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full bg-gray-500 mr-3"></div>
+                      <div>
+                        <h4 className="font-medium">Lost</h4>
+                        <p className="text-sm text-gray-600">Asset cannot be located</p>
+                      </div>
+                    </div>
+                  </div>
 
-          <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
-            <h4 className="font-medium text-indigo-800 mb-2">Important Notes</h4>
-            <ul className="list-disc pl-5 text-sm text-indigo-700 space-y-1">
-              <li>Update status promptly when assets change condition</li>
-              <li>Damaged and Lost assets require incident reports</li>
-              <li>Assets under maintenance should have estimated return dates</li>
-              <li>Returned assets become Available again</li>
-            </ul>
-          </div>
-        </motion.div>
+                  <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                    <h4 className="font-medium text-indigo-800 mb-2">Important Notes</h4>
+                    <ul className="list-disc pl-5 text-sm text-indigo-700 space-y-1">
+                      <li>Update status promptly when assets change condition</li>
+                      <li>Damaged and Lost assets require incident reports</li>
+                      <li>Assets under maintenance should have estimated return dates</li>
+                      <li>Returned assets become Available again</li>
+                    </ul>
+                  </div>
+                </motion.div>
       </div>
     </motion.div>
   );

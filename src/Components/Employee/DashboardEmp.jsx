@@ -1,3 +1,6 @@
+
+
+
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaTasks, FaChartLine, FaUserShield, FaUsers, FaArrowRight, FaCalendarAlt, FaHome } from 'react-icons/fa';
@@ -29,9 +32,6 @@ const Home = () => {
         },
         loading: true
     });
-
-    // Get base API URL from environment variables
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     // Animation variants
     const containerVariants = {
@@ -107,14 +107,14 @@ const Home = () => {
     const fetchAnalyticsData = async (user, token) => {
         try {
             const [leaveRes, tasksRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/api/employee/leave-balance/${user.id}`, {
+                fetch(`http://localhost:8080/api/employee/leave-balance/${user.id}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
                     }
                 }),
-                axios.get(`${API_BASE_URL}/api/employee/tasks/${user.id}`, {
+                axios.get(`http://localhost:8080/api/employee/tasks/${user.id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
             ]);
@@ -545,3 +545,5 @@ const Home = () => {
 };
 
 export default Home;
+
+

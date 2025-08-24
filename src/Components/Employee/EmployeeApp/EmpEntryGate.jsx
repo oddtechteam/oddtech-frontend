@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -25,45 +26,11 @@ const VisitorForm = () => {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraStream, setCameraStream] = useState(null);
 
-  // Get API base URL from environment variables
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
-    fetchVisitorRecords();
-    
-    // Animation on component mount
-    setTimeout(() => {
-      setFormElementsVisible(true);
-    }, 100);
-
-    // Cleanup camera stream on unmount
-    return () => {
-      if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [cameraStream]);
-
-  // Fetch visitor records from API
-  const fetchVisitorRecords = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/visitors`);
-      if (response.ok) {
-        const data = await response.json();
-        setVisitorRecords(data);
-      } else {
-        console.error('Failed to fetch visitor records');
-        // Fallback to localStorage if API fails
-        const records = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
-        setVisitorRecords(records);
-      }
-    } catch (error) {
-      console.error('Error fetching visitor records:', error);
-      // Fallback to localStorage if API fails
-      const records = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
-      setVisitorRecords(records);
-    }
-  };
+    const records = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
+    setVisitorRecords(records);
+  }, []);
 
   // Format date function
   const formatDate = (dateString) => {
@@ -83,6 +50,21 @@ const VisitorForm = () => {
         return <span className="px-2 py-1 text-xs font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">Pending</span>;
     }
   };
+
+
+  // Animation on component mount
+  useEffect(() => {
+    setTimeout(() => {
+      setFormElementsVisible(true);
+    }, 100);
+
+    // Cleanup camera stream on unmount
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [cameraStream]);
 
   const startCamera = async () => {
     try {
@@ -182,7 +164,7 @@ const VisitorForm = () => {
     fileInputRef.current.click();
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -198,62 +180,9 @@ const VisitorForm = () => {
       return;
     }
 
-    try {
-      // Create FormData object to handle file upload
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('vehicle', formData.vehicle);
-      submitData.append('assets', formData.assets);
-      submitData.append('reason', formData.reason);
-      submitData.append('entryTime', formData.entryTime);
-      submitData.append('exitTime', formData.exitTime);
-      
-      if (formData.photo) {
-        submitData.append('photo', formData.photo);
-      }
-
-      // Send data to API
-      const response = await fetch(`${API_BASE_URL}/api/visitors`, {
-        method: 'POST',
-        body: submitData,
-      });
-
-      if (response.ok) {
-        const newVisitor = await response.json();
-        
-        // Update local state
-        setVisitorRecords(prev => [newVisitor, ...prev]);
-        
-        // Show success message
-        Swal.fire({
-          title: 'Request Submitted!',
-          text: 'Your entry request has been sent for approval.',
-          icon: 'success',
-          confirmButtonColor: '#4f46e5',
-          timer: 3000,
-          timerProgressBar: true,
-          willClose: () => {
-            // Reset form
-            setFormData({
-              name: '',
-              vehicle: '',
-              assets: '',
-              reason: '',
-              entryTime: '',
-              exitTime: '',
-              photo: null,
-              photoPreview: null
-            });
-            setIsSubmitting(false);
-          }
-        });
-      } else {
-        throw new Error('Failed to submit visitor request');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      
-      // Fallback to localStorage if API fails
+    // Simulate API call delay
+    setTimeout(() => {
+      // Save to localStorage for demo purposes
       const requests = JSON.parse(localStorage.getItem('visitorRequests') || '[]');
       const newRequest = {
         ...formData,
@@ -262,11 +191,11 @@ const VisitorForm = () => {
         timestamp: new Date().toISOString()
       };
       localStorage.setItem('visitorRequests', JSON.stringify([...requests, newRequest]));
-      setVisitorRecords(prev => [newRequest, ...prev]);
-      
+
+      // Show success message with SweetAlert
       Swal.fire({
-        title: 'Request Submitted (Offline)',
-        text: 'Your entry request has been saved locally and will be synced when online.',
+        title: 'Request Submitted!',
+        text: 'Your entry request has been sent for approval.',
         icon: 'success',
         confirmButtonColor: '#4f46e5',
         timer: 3000,
@@ -286,12 +215,13 @@ const VisitorForm = () => {
           setIsSubmitting(false);
         }
       });
-    }
+    }, 1500);
   };
 
   // Animation classes
   const inputAnimation = "transition-all duration-500 ease-out";
   const fadeInClass = formElementsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4";
+
   return (
     <div>
       <Navbar />

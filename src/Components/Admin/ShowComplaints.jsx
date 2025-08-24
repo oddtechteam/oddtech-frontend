@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Get API base URL from .env
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const ShowComplaints = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaints, setSelectedComplaints] = useState(new Set());
@@ -15,7 +12,7 @@ const ShowComplaints = () => {
 
     const fetchComplaints = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/complaint/show`);
+            const response = await axios.get('http://localhost:8080/complaint/show');
             setComplaints(response.data);
         } catch (error) {
             console.error('Error fetching complaints:', error);
@@ -26,7 +23,7 @@ const ShowComplaints = () => {
         if (selectAll) {
             setSelectedComplaints(new Set());
         } else {
-            const allIds = new Set(complaints.map(c => c.id));
+            const allIds = new Set(complaints.map(complaint => complaint.id));
             setSelectedComplaints(allIds);
         }
         setSelectAll(!selectAll);
@@ -34,9 +31,11 @@ const ShowComplaints = () => {
 
     const toggleSelectComplaint = (id) => {
         const newSelection = new Set(selectedComplaints);
-        if (newSelection.has(id)) newSelection.delete(id);
-        else newSelection.add(id);
-
+        if (newSelection.has(id)) {
+            newSelection.delete(id);
+        } else {
+            newSelection.add(id);
+        }
         setSelectedComplaints(newSelection);
         setSelectAll(newSelection.size === complaints.length);
     };

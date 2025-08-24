@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_URL = 'http://localhost:8080/api/auth/attendance';
 
 const AttendancePage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -15,38 +15,27 @@ const AttendancePage = () => {
   }, [selectedDate]);
 
   const fetchAllUsers = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/admin/users`);
-      if (!res.ok) throw new Error('Failed to fetch users');
-      const data = await res.json();
-      setUsers(data);
-    } catch (error) {
-      console.error(error);
-      setUsers([]);
-    }
+    const res = await fetch('http://localhost:8080/api/admin/users');
+    const data = await res.json();
+    setUsers(data);
   };
 
   const fetchAttendance = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/attendance`);
-      if (!res.ok) throw new Error('Failed to fetch attendance');
-      const allData = await res.json();
+    const res = await fetch('http://localhost:8080/api/auth/attendance');
+    const allData = await res.json();
 
-      const filtered = allData.filter(
-        entry => new Date(entry.date).toDateString() === selectedDate.toDateString()
-      );
+    const filtered = allData.filter(entry =>
+      new Date(entry.date).toDateString() === selectedDate.toDateString()
+    );
 
-      // Convert to map for quick lookup
-      const map = {};
-      filtered.forEach(entry => {
-        map[entry.email] = entry;
-      });
-      setAttendanceMap(map);
-    } catch (error) {
-      console.error(error);
-      setAttendanceMap({});
-    }
+    // Convert to map for quick lookup
+    const map = {};
+    filtered.forEach(entry => {
+      map[entry.email] = entry;
+    });
+    setAttendanceMap(map);
   };
+
   return (
     <div className="flex flex-col md:flex-row p-4">
       {/* Calendar */}
