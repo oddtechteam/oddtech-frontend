@@ -124,6 +124,9 @@ const Home = () => {
     // Initialize Three.js scene for particles
     useEffect(() => {
         if (!canvasRef.current) return;
+
+        gsap.registerPlugin(ScrollTrigger); // safe to call again
+        ScrollTrigger.refresh();   
         
         // Scene setup
         const scene = new THREE.Scene();
@@ -501,7 +504,8 @@ const Home = () => {
         
         // Cleanup ScrollTrigger
         return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            ScrollTrigger.getAll().forEach(t => t.kill());
+            ScrollTrigger.clearMatchMedia?.();
         };
     }, []);
 
