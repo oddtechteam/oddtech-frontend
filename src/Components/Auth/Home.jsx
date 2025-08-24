@@ -1,6 +1,9 @@
 
 
 import React, { useRef, useEffect, useState } from 'react';
+import { gsap } from "gsap";
+import { Scene, PerspectiveCamera, WebGLRenderer } from "three";
+
 import { motion } from 'framer-motion';
 import { 
   FaHandshake, FaChartLine, FaShieldAlt, FaComments, 
@@ -9,9 +12,8 @@ import {
   FaLightbulb
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import gsap from 'gsap';
+
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 gsap.registerPlugin(ScrollTrigger);
