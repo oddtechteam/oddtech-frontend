@@ -1,12 +1,12 @@
 import axios, { InternalAxiosRequestConfig, AxiosError } from "axios";
 
 const sanitizeBase = (url: string | undefined) =>
-  (url ?? "").replace(/\/+$/, ""); // remove trailing slash
+  (url ?? "").replace(/\/+$/, ""); // drop trailing slash
 
 const javaBase = sanitizeBase(import.meta.env.VITE_API_BASE_URL);
 const pyBase   = sanitizeBase(import.meta.env.VITE_PYTHON_API_BASE_URL);
 
-// build a full URL safely (no double slashes, no "undefined")
+// Build a full URL safely (prevents "undefined/" and "//")
 export const makeUrl = (base: string, path: string) => {
   if (!base) throw new Error("Missing API base URL");
   if (!path) throw new Error("Missing API path");
@@ -23,12 +23,22 @@ export const pyApi = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// ----- Auth header -----
 const attachAuth = (config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers = config.headers ?? {};
     (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
   }
+
+  // *** DEBUG: log the final URL so we can spot any 'undefined' caller ***
+  try {
+    const base = (config.baseURL ?? javaBase) || "";
+    const url  = config.url ?? "";
+    const final = new URL(url, base + "/").toString();
+    console.log(`[HTTP] ${config.method?.toUpperCase()} ${final}`);
+  } catch {}
+
   return config;
 };
 

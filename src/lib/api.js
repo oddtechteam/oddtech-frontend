@@ -6,8 +6,7 @@ import { endpoints } from "./endpoints";
 export const BASE = javaApi.defaults.baseURL;
 
 export function login(body) {
-  // reuse the typed service (works from JS)
-  return tsLogin(body);
+  return tsLogin(body); // delegate to TS service
 }
 
 export const googleAuthUrl = () =>
