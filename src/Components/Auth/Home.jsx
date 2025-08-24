@@ -12,7 +12,12 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+// Make THREE available globally if something expects window.THREE (prevents "THREE is not defined")
+if (typeof window !== 'undefined' && !window.THREE) {
+  window.THREE = THREE;
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
