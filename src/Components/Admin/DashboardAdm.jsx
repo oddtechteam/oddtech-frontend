@@ -1164,8 +1164,8 @@ import { FiUsers, FiCheckSquare, FiCalendar, FiClock, FiTrendingUp, FiCoffee } f
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
-const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin';
-const ATTENDANCE_API_URL = 'import.meta.env.VITE_API_BASE_URL/api/auth/attendance';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/admin`;
+const ATTENDANCE_API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/auth/attendance`;
 
 const AdminDashboard = () => {
     const navigate = useNavigate();

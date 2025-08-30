@@ -4,8 +4,16 @@ import 'react-calendar/dist/Calendar.css';
 
 import { get } from "../../Components/axiosInstance";
 
-const API_URL = api.get("/auth/attendance");  
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const attendanceUrl = `${baseUrl}/auth/attendance`;
 
+fetch(attendanceUrl)
+  .then(response => response.json())
+  .then(data => {
+    // handle data
+  }).catch(error => {
+    // handle error
+  });
 
 
 const AttendancePage = () => {
