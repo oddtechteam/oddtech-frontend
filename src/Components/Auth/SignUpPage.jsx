@@ -63,7 +63,7 @@
 //       formData.append("password", data.password);
 //       formData.append("faceImage", selectedFile);
 
-//       const res = await axios.post("http://localhost:8080/api/auth/signup", formData, {
+//       const res = await axios.post("import.meta.env.VITE_API_BASE_URL/api/auth/signup", formData, {
 //         headers: {
 //           "Content-Type": "multipart/form-data"
 //         }
@@ -380,7 +380,7 @@ export default function SignUp() {
       formData.append("password", data.password);
       formData.append("faceImage", selectedFile);
 
-      const res = await axios.post("http://localhost:8080/api/auth/signup", formData, {
+      const res = await axios.post("import.meta.env.VITE_API_BASE_URL/api/auth/signup", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }

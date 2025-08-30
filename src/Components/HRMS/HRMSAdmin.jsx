@@ -27,7 +27,7 @@
 
 //         const fetchLeaveApplications = async () => {
 //             try {
-//                 const response = await fetch(`http://localhost:8080/api/admin/leave/all`, {
+//                 const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/admin/leave/all`, {
 //                     headers: {
 //                         "Authorization": `Bearer ${token}`,
 //                         "Content-Type": "application/json"
@@ -104,7 +104,7 @@
 
 //     const handleLeaveAction = (leaveId, newStatus, action) => {
 //         const token = localStorage.getItem("token");
-//         fetch(`http://localhost:8080/api/admin/leave/${leaveId}/leaveStatus?leaveStatus=${newStatus}`, {
+//         fetch(`import.meta.env.VITE_API_BASE_URL/api/admin/leave/${leaveId}/leaveStatus?leaveStatus=${newStatus}`, {
 //             method: 'PUT',
 //             headers: {
 //                 'Authorization': `Bearer ${token}`, // 🔁 use your token from login
@@ -170,7 +170,7 @@
 
 //         const fetchAttendance = async () => {
 //             try {
-//                 const res = await fetch("http://localhost:8080/api/auth/attendance");
+//                 const res = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/attendance");
 //                 if (!res.ok) throw new Error("Failed to fetch attendance");
 
 //                 const allData = await res.json();
@@ -929,7 +929,7 @@ const HRMSAdmin = () => {
 
         const fetchTeamMembers = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/admin/users`, {
+                const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/admin/users`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
@@ -946,7 +946,7 @@ const HRMSAdmin = () => {
 
         const fetchLeaveApplications = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/admin/leave/all`, {
+                const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/admin/leave/all`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
@@ -1030,7 +1030,7 @@ const HRMSAdmin = () => {
 
     const handleLeaveAction = (leaveId, newStatus, action) => {
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:8080/api/admin/leave/${leaveId}/leaveStatus?leaveStatus=${newStatus}`, {
+        fetch(`import.meta.env.VITE_API_BASE_URL/api/admin/leave/${leaveId}/leaveStatus?leaveStatus=${newStatus}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -1085,7 +1085,7 @@ const HRMSAdmin = () => {
 
         const fetchAttendance = async () => {
             try {
-                const res = await fetch("http://localhost:8080/api/auth/attendance");
+                const res = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/attendance");
                 if (!res.ok) throw new Error("Failed to fetch attendance");
 
                 const allData = await res.json();

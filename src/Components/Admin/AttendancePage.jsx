@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const API_URL = 'http://localhost:8080/api/auth/attendance';
+import { get } from "../../Components/axiosInstance";
+
+const API_URL = api.get("/auth/attendance");  
+
+
 
 const AttendancePage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -15,13 +19,13 @@ const AttendancePage = () => {
   }, [selectedDate]);
 
   const fetchAllUsers = async () => {
-    const res = await fetch('http://localhost:8080/api/admin/users');
-    const data = await res.json();
+    const users = await get("/admin/users");
+    const data = await users.json();
     setUsers(data);
   };
 
   const fetchAttendance = async () => {
-    const res = await fetch('http://localhost:8080/api/auth/attendance');
+    const res = await get("/auth/attendance");
     const allData = await res.json();
 
     const filtered = allData.filter(entry =>

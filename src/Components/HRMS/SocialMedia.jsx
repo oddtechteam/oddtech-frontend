@@ -51,7 +51,7 @@
 //     try {
 //       const token = localStorage.getItem('token');
 
-//       const response = await fetch('http://localhost:8080/api/post/createpost', {
+//       const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/post/createpost', {
 //         method: 'POST',
 //         headers: {
 //           Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@
 //     try {
 //       const token = localStorage.getItem('token');
 
-//       const response = await fetch('http://localhost:8080/api/post/allpostbydesc', {
+//       const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/post/allpostbydesc', {
 //         method: 'GET',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -125,7 +125,7 @@
 //     try {
 //       const token = localStorage.getItem("token");
 
-//       const response = await fetch(`http://localhost:8080/api/post/like/${postId}`, {
+//       const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/post/like/${postId}`, {
 //         method: "PUT",
 //         headers: {
 //           Authorization: `Bearer ${token}`,
@@ -184,7 +184,7 @@
 
 //     try {
 
-//       const response = await fetch("http://localhost:8080/api/note/createnote", {
+//       const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/note/createnote", {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -223,7 +223,7 @@
 //     const token = localStorage.getItem('token');
 
 //     try {
-//       const response = await fetch("http://localhost:8080/api/note/allnotes", {
+//       const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/note/allnotes", {
 //         method: "GET",
 //         headers: {
 //           "Authorization": `Bearer ${token}`
@@ -262,7 +262,7 @@
 //     };
 
 //     try {
-//       const response = await fetch('http://localhost:8080/api/issue/createissue', {
+//       const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/issue/createissue', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -299,7 +299,7 @@
 //     const token = localStorage.getItem('token');
 
 //     try {
-//       const response = await fetch("http://localhost:8080/api/issue/allissues", {
+//       const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/issue/allissues", {
 //         method: "GET",
 //         headers: {
 //           "Authorization": `Bearer ${token}`
@@ -333,7 +333,7 @@
 //     try {
 //       const token = localStorage.getItem('token');
 
-//       const response = await fetch('http://localhost:8080/api/postcomment/createcomment', {
+//       const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/postcomment/createcomment', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -383,7 +383,7 @@
 //     try {
 //       const token = localStorage.getItem('token');
 
-//       const response = await fetch(`http://localhost:8080/api/postcomment/fetchcomments/${postId}`, {
+//       const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/postcomment/fetchcomments/${postId}`, {
 //         method: 'GET',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -612,7 +612,7 @@
 //                         {post.imageUrl && (
 //                           <div className="border-t border-b border-gray-200">
 //                             <img
-//                               src={`http://localhost:8080${post.imageUrl}`}
+//                               src={`import.meta.env.VITE_API_BASE_URL${post.imageUrl}`}
 //                               alt="Post"
 //                               className="w-full h-64 md:h-96 object-cover"
 //                             />
@@ -1042,7 +1042,7 @@ const SocialMedia = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/post/createpost', {
+      const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/post/createpost', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -1073,7 +1073,7 @@ const SocialMedia = () => {
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/post/allpostbydesc', {
+      const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/post/allpostbydesc', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
       });
@@ -1103,7 +1103,7 @@ const SocialMedia = () => {
   const likePost = async (postId) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:8080/api/post/like/${postId}`, {
+      const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/post/like/${postId}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -1142,7 +1142,7 @@ const SocialMedia = () => {
     const payload = { content: newNote };
 
     try {
-      const response = await fetch("http://localhost:8080/api/note/createnote", {
+      const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/note/createnote", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payload)
@@ -1167,7 +1167,7 @@ const SocialMedia = () => {
   const fetchNotes = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch("http://localhost:8080/api/note/allnotes", {
+      const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/note/allnotes", {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -1196,7 +1196,7 @@ const SocialMedia = () => {
     const issueDTO = { content: newIssue };
 
     try {
-      const response = await fetch('http://localhost:8080/api/issue/createissue', {
+      const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/issue/createissue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(issueDTO)
@@ -1225,7 +1225,7 @@ const SocialMedia = () => {
   const fetchIssues = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch("http://localhost:8080/api/issue/allissues", {
+      const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/issue/allissues", {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -1253,7 +1253,7 @@ const SocialMedia = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/postcomment/createcomment', {
+      const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/postcomment/createcomment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ content: newComment, postId })
@@ -1291,7 +1291,7 @@ const SocialMedia = () => {
   const fetchComments = async (postId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8080/api/postcomment/fetchcomments/${postId}`, {
+      const response = await fetch(`import.meta.env.VITE_API_BASE_URL/api/postcomment/fetchcomments/${postId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
@@ -1503,7 +1503,7 @@ const SocialMedia = () => {
                         {post.imageUrl && (
                           <div className="border-t border-b border-gray-200">
                             <img
-                              src={`http://localhost:8080${post.imageUrl}`}
+                              src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}${post.imageUrl}`}
                               alt="Post"
                               className="w-full h-64 md:h-96 object-cover"
                             />
