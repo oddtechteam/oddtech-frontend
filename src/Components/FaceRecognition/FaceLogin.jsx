@@ -39,7 +39,7 @@
 
 //   const fetchCache = useCallback(async () => {
 //     try {
-//       const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/cache");
+//       const response = await fetch("http://localhost:8080/api/auth/cache");
 //       if (!response.ok) throw new Error("Failed to fetch embeddings");
 //       return await response.json();
 //     } catch (err) {
@@ -117,7 +117,7 @@
 //         embedding: currentEmbedding
 //       };
 
-//       const loginResponse = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/login-by-face", {
+//       const loginResponse = await fetch("http://localhost:8080/api/auth/login-by-face", {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify(payload)
@@ -212,7 +212,7 @@ const FaceLogin = ({
 
   const fetchCache = useCallback(async () => {
     try {
-      const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/cache");
+      const response = await fetch("http://localhost:8080/api/auth/cache");
       if (!response.ok) throw new Error("Failed to fetch embeddings");
       return await response.json();
     } catch (err) {
@@ -248,7 +248,7 @@ const FaceLogin = ({
     setIsLoading(true);
     try {
       // Get current embedding from Python server
-      const embeddingResponse = await fetch(`${import.meta.env.VITE_FACE_RECOGNITION_API_BASE_URL || 'http://localhost:5005'}/generate-embedding`, {
+      const embeddingResponse = await fetch("http://localhost:5005/generate-embedding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64Image })
@@ -264,7 +264,7 @@ const FaceLogin = ({
       const userName = cachedUser.name || loggedUser.name || "User";
 
       // Compare embeddings on the server
-            const compareResponse = await fetch(`${import.meta.env.VITE_FACE_RECOGNITION_API_BASE_URL || 'http://localhost:5005'}/compare-embeddings`, {
+            const compareResponse = await fetch("http://localhost:5005/compare-embeddings", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -297,7 +297,7 @@ const FaceLogin = ({
         embedding: currentEmbedding
       };
 
-      const loginResponse = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/login-by-face", {
+      const loginResponse = await fetch("http://localhost:8080/api/auth/login-by-face", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

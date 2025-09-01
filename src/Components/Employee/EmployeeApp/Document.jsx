@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
 function DocumentManagementApp() {
-  const API_BASE_URL = "import.meta.env.VITE_API_BASE_URL/api/documents";
+  const API_BASE_URL = "http://localhost:8080/api/documents";
   const navigate = useNavigate();
 
   // State management
@@ -137,7 +137,7 @@ function DocumentManagementApp() {
 
   const handleDownload = () => {
     if (viewDocument) {
-      window.open(`import.meta.env.VITE_API_BASE_URL/uploads/${viewDocument.filePath}`, '_blank');
+      window.open(`http://localhost:8080/uploads/${viewDocument.filePath}`, '_blank');
     }
   };
 

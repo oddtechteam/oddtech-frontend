@@ -6,7 +6,7 @@
 // import emailjs from 'emailjs-com';
 // import 'emailjs-com/dist/email.min.js';
 // // Import emailjs
-// const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin'; // Replace with your actual API base URL
+// const API_BASE_URL = 'http://localhost:8080/api/admin'; // Replace with your actual API base URL
 
 // const PostTask = () => {
 //     const navigate = useNavigate();
@@ -373,7 +373,7 @@ import axios from 'axios'; // Make sure to install axios
 import emailjs from 'emailjs-com';
 import 'emailjs-com/dist/email.min.js';
 // Import emailjs
-const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin'; // Replace with your actual API base URL
+const API_BASE_URL = 'http://localhost:8080/api/admin'; // Replace with your actual API base URL
 
 const PostTask = () => {
     const navigate = useNavigate();

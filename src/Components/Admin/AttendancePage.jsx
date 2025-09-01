@@ -2,19 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-import { get } from "../../Components/axiosInstance";
-
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const attendanceUrl = `${baseUrl}/auth/attendance`;
-
-fetch(attendanceUrl)
-  .then(response => response.json())
-  .then(data => {
-    // handle data
-  }).catch(error => {
-    // handle error
-  });
-
+const API_URL = 'http://localhost:8080/api/auth/attendance';
 
 const AttendancePage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -27,13 +15,13 @@ const AttendancePage = () => {
   }, [selectedDate]);
 
   const fetchAllUsers = async () => {
-    const users = await get("/admin/users");
-    const data = await users.json();
+    const res = await fetch('http://localhost:8080/api/admin/users');
+    const data = await res.json();
     setUsers(data);
   };
 
   const fetchAttendance = async () => {
-    const res = await get("/auth/attendance");
+    const res = await fetch('http://localhost:8080/api/auth/attendance');
     const allData = await res.json();
 
     const filtered = allData.filter(entry =>

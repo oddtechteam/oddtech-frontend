@@ -12,7 +12,7 @@ const ShowComplaints = () => {
 
     const fetchComplaints = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/complaint/show`);
+            const response = await axios.get('http://localhost:8080/complaint/show');
             setComplaints(response.data);
         } catch (error) {
             console.error('Error fetching complaints:', error);
