@@ -5,7 +5,7 @@
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-// const API_BASE_URL = 'http://localhost:8080/api/admin'; // Update with your API base URL
+// const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin'; // Update with your API base URL
 
 // const UpdateTask = () => {
 //     const { id } = useParams();
@@ -280,7 +280,7 @@
 // import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // import { FaArrowLeft } from 'react-icons/fa';
 
-// const API_BASE_URL = 'http://localhost:8080/api/admin'; // Update with your API base URL
+// const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin'; // Update with your API base URL
 
 // const UpdateTask = () => {
 //   const { id } = useParams();
@@ -586,7 +586,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { FaArrowLeft } from 'react-icons/fa';
 import Navbar from '../NavBar/Navbar';
 
-const API_BASE_URL = 'http://localhost:8080/api/admin';
+const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin';
 
 const UpdateTask = () => {
   const { id } = useParams();

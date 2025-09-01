@@ -45,7 +45,7 @@
 // import MuiAlert from '@mui/material/Alert';
 // import { motion, AnimatePresence } from 'framer-motion';
 
-// const API_BASE_URL = 'http://localhost:8080/api/employee';
+// const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/employee';
 
 // // Date comparison utility
 // const compareDates = (dateString) => {
@@ -881,7 +881,7 @@ import {
 import MuiAlert from '@mui/material/Alert';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE_URL = 'http://localhost:8080/api/employee';
+const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/employee';
 
 // Date comparison utility
 const compareDates = (dateString) => {
