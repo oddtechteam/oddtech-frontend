@@ -19,7 +19,7 @@
 
 // ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
-// const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin';
+// const API_BASE_URL = 'http://localhost:8080/api/admin';
 
 // const TeamOverviewDashboard = () => {
 //   const [teamMembers, setTeamMembers] = useState([]);
@@ -437,7 +437,7 @@
 
 // ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
-// const API_BASE_URL = 'import.meta.env.VITE_API_BASE_URL/api/admin';
+// const API_BASE_URL = 'http://localhost:8080/api/admin';
 
 // const AdminDashboard = () => {
 //     const navigate = useNavigate();
@@ -1164,8 +1164,8 @@ import { FiUsers, FiCheckSquare, FiCalendar, FiClock, FiTrendingUp, FiCoffee } f
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
-const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/admin`;
-const ATTENDANCE_API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/auth/attendance`;
+const API_BASE_URL = 'http://localhost:8080/api/admin';
+const ATTENDANCE_API_URL = 'http://localhost:8080/api/auth/attendance';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -1272,7 +1272,7 @@ const AdminDashboard = () => {
     // Fetch users for team members
     const fetchUsers = async () => {
       try {
-        const response = await fetch('import.meta.env.VITE_API_BASE_URL/api/auth/users');
+        const response = await fetch('http://localhost:8080/api/auth/users');
         if (!response.ok) throw new Error('Failed to fetch users');
 
         const data = await response.json();

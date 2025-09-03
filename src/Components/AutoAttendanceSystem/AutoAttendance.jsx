@@ -622,7 +622,7 @@
 //       const currentEmbedding = embeddingResult.embedding;
 
 //       // Step 2: Get all cached embeddings to compare against
-//       const cacheResponse = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/cache");
+//       const cacheResponse = await fetch("http://localhost:8080/api/auth/cache");
 //       if (!cacheResponse.ok) throw new Error("Failed to fetch cached embeddings");
 //       const cachedEmbeddings = await cacheResponse.json();
 
@@ -633,7 +633,7 @@
 //       for (const cachedUser of cachedEmbeddings) {
 //         if (!cachedUser.embedding || cachedUser.embedding.length === 0) continue;
 
-//         const compareResponse = await fetch("${import.meta.env.VITE_FACE_RECOGNITION_API_BASE_URL || 'http://localhost:5005'}/compare-embeddings", {
+//         const compareResponse = await fetch("http://localhost:5005/compare-embeddings", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({
@@ -654,7 +654,7 @@
 
 //       if (bestMatch) {
 //         // Get additional user info from database
-//         const userResponse = await fetch(`import.meta.env.VITE_API_BASE_URL/api/auth/users?email=${bestMatch.email}`);
+//         const userResponse = await fetch(`http://localhost:8080/api/auth/users?email=${bestMatch.email}`);
 //         if (userResponse.ok) {
 //           const userData = await userResponse.json();
 //           if (userData.length > 0) {
@@ -694,7 +694,7 @@
 
 //       if (recognizedEmail) {
 //         // Send attendance record to backend
-//         const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/attendance/check-in-out", {
+//         const response = await fetch("http://localhost:8080/api/attendance/check-in-out", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({
@@ -1265,7 +1265,7 @@
 //       const currentEmbedding = embeddingResult.embedding;
 
 //       // Step 2: Get all cached embeddings to compare against
-//       const cacheResponse = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/cache");
+//       const cacheResponse = await fetch("http://localhost:8080/api/auth/cache");
 //       if (!cacheResponse.ok) throw new Error("Failed to fetch cached embeddings");
 //       const cachedEmbeddings = await cacheResponse.json();
 
@@ -1276,7 +1276,7 @@
 //       for (const cachedUser of cachedEmbeddings) {
 //         if (!cachedUser.embedding || cachedUser.embedding.length === 0) continue;
 
-//         const compareResponse = await fetch("${import.meta.env.VITE_FACE_RECOGNITION_API_BASE_URL || 'http://localhost:5005'}/compare-embeddings", {
+//         const compareResponse = await fetch("http://localhost:5005/compare-embeddings", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({
@@ -1297,7 +1297,7 @@
 
 //       if (bestMatch) {
 //         // Get additional user info from database
-//         const userResponse = await fetch(`import.meta.env.VITE_API_BASE_URL/api/auth/users?email=${bestMatch.email}`);
+//         const userResponse = await fetch(`http://localhost:8080/api/auth/users?email=${bestMatch.email}`);
 //         if (userResponse.ok) {
 //           const userData = await userResponse.json();
 //           if (userData.length > 0) {
@@ -1337,7 +1337,7 @@
 
 //       if (recognizedEmail) {
 //         // Send attendance record to backend
-//         const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/attendance/check-in-out", {
+//         const response = await fetch("http://localhost:8080/api/attendance/check-in-out", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({
@@ -1926,7 +1926,7 @@ const AttendanceSystem = () => {
       const currentEmbedding = embeddingResult.embedding;
 
       // Step 2: Get all cached embeddings to compare against
-      const cacheResponse = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/cache");
+      const cacheResponse = await fetch("http://localhost:8080/api/auth/cache");
       if (!cacheResponse.ok) throw new Error("Failed to fetch cached embeddings");
       const cachedEmbeddings = await cacheResponse.json();
 
@@ -1937,7 +1937,7 @@ const AttendanceSystem = () => {
       for (const cachedUser of cachedEmbeddings) {
         if (!cachedUser.embedding || cachedUser.embedding.length === 0) continue;
 
-        const compareResponse = await fetch("${import.meta.env.VITE_FACE_RECOGNITION_API_BASE_URL || 'http://localhost:5005'}/compare-embeddings", {
+        const compareResponse = await fetch("http://localhost:5005/compare-embeddings", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1958,7 +1958,7 @@ const AttendanceSystem = () => {
 
       if (bestMatch) {
         // Get additional user info from database
-        const userResponse = await fetch(`import.meta.env.VITE_API_BASE_URL/api/auth/users?email=${bestMatch.email}`);
+        const userResponse = await fetch(`http://localhost:8080/api/auth/users?email=${bestMatch.email}`);
         if (userResponse.ok) {
           const userData = await userResponse.json();
           if (userData.length > 0) {
@@ -1998,7 +1998,7 @@ const AttendanceSystem = () => {
 
       if (recognizedEmail) {
         // Send attendance record to backend
-        const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/attendance/check-in-out", {
+        const response = await fetch("http://localhost:8080/api/attendance/check-in-out", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

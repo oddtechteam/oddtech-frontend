@@ -26,7 +26,7 @@
 //     const fetchLeaveBalance = () => {
 //         const token = localStorage.getItem("token");
 
-//         fetch(`import.meta.env.VITE_API_BASE_URL/api/employee/leave-balance/${user.id}`, {
+//         fetch(`http://localhost:8080/api/employee/leave-balance/${user.id}`, {
 //             method: "GET",
 //             headers: {
 //                 "Authorization": `Bearer ${token}`,
@@ -49,7 +49,7 @@
 //         if (!user || !user.id) return;
 
 //         const token = localStorage.getItem("token");
-//         fetch(`import.meta.env.VITE_API_BASE_URL/api/employee/leave/user/${user.id}`, {
+//         fetch(`http://localhost:8080/api/employee/leave/user/${user.id}`, {
 //             method: "GET",
 //             headers: {
 //                 "Authorization": `Bearer ${token}`,
@@ -109,7 +109,7 @@
 //         };
 
 //         try {
-//             const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/employee/leave/createleave", {
+//             const response = await fetch("http://localhost:8080/api/employee/leave/createleave", {
 //                 method: "POST",
 //                 headers: {
 //                     "Content-Type": "application/json",
@@ -216,7 +216,7 @@
 
 //         const fetchAttendance = async () => {
 //             try {
-//                 const res = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/attendance");
+//                 const res = await fetch("http://localhost:8080/api/auth/attendance");
 //                 if (!res.ok) throw new Error("Failed to fetch attendance");
 
 //                 const allData = await res.json();
@@ -1177,7 +1177,7 @@ const HRMSEmployee = () => {
         if (!user || !user.id) return;
 
         try {
-            const res = await fetch(`import.meta.env.VITE_API_BASE_URL/api/employee/leave-balance/${user.id}`, {
+            const res = await fetch(`http://localhost:8080/api/employee/leave-balance/${user.id}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -1201,7 +1201,7 @@ const HRMSEmployee = () => {
         if (!user || !user.id) return;
 
         try {
-            const res = await fetch(`import.meta.env.VITE_API_BASE_URL/api/employee/attendance-summary/${user.id}`, {
+            const res = await fetch(`http://localhost:8080/api/employee/attendance-summary/${user.id}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -1224,7 +1224,7 @@ const HRMSEmployee = () => {
 
         const token = localStorage.getItem("token");
         try {
-            const res = await fetch(`import.meta.env.VITE_API_BASE_URL/api/employee/leave/user/${user.id}`, {
+            const res = await fetch(`http://localhost:8080/api/employee/leave/user/${user.id}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -1290,7 +1290,7 @@ const HRMSEmployee = () => {
         };
 
         try {
-            const response = await fetch("import.meta.env.VITE_API_BASE_URL/api/employee/leave/createleave", {
+            const response = await fetch("http://localhost:8080/api/employee/leave/createleave", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -1396,7 +1396,7 @@ const HRMSEmployee = () => {
 
         const fetchAttendance = async () => {
             try {
-                const res = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/attendance");
+                const res = await fetch("http://localhost:8080/api/auth/attendance");
                 if (!res.ok) throw new Error("Failed to fetch attendance");
 
                 const allData = await res.json();

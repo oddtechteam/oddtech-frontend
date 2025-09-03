@@ -8,7 +8,7 @@
 
 //     const captureAndSend = async () => {
 //         const imageSrc = webcamRef.current.getScreenshot();
-//         const response = await axios.post("import.meta.env.VITE_API_BASE_URL/api/attendance/mark", {
+//         const response = await axios.post("http://localhost:8080/api/attendance/mark", {
 //             employeeId,
 //             image: imageSrc
 //         });
@@ -49,7 +49,7 @@ const Attendance = () => {
 
     const fetchAttendance = async () => {
         try {
-            const res = await fetch("import.meta.env.VITE_API_BASE_URL/api/auth/attendance");
+            const res = await fetch("http://localhost:8080/api/auth/attendance");
             if (!res.ok) throw new Error("Failed to fetch attendance");
 
             const allData = await res.json();

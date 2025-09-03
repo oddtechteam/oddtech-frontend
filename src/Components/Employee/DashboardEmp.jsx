@@ -107,14 +107,14 @@ const Home = () => {
     const fetchAnalyticsData = async (user, token) => {
         try {
             const [leaveRes, tasksRes] = await Promise.all([
-                fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/employee/leave-balance/${user.id}`, {
+                fetch(`http://localhost:8080/api/employee/leave-balance/${user.id}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
                     }
                 }),
-                axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/employee/tasks/${user.id}`, {
+                axios.get(`http://localhost:8080/api/employee/tasks/${user.id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
             ]);
