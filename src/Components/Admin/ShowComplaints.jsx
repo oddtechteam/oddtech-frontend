@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
 const ShowComplaints = () => {
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaints, setSelectedComplaints] = useState(new Set());
@@ -12,7 +15,7 @@ const ShowComplaints = () => {
 
     const fetchComplaints = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/complaint/show');
+            const response = await axios.get(`${API_BASE_URL}/complaint/show`);
             setComplaints(response.data);
         } catch (error) {
             console.error('Error fetching complaints:', error);

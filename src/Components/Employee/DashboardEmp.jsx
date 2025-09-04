@@ -1,6 +1,3 @@
-
-
-
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaTasks, FaChartLine, FaUserShield, FaUsers, FaArrowRight, FaCalendarAlt, FaHome } from 'react-icons/fa';

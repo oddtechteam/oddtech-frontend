@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const API_URL = 'http://localhost:8080/api/auth/attendance';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const AttendancePage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -15,13 +15,13 @@ const AttendancePage = () => {
   }, [selectedDate]);
 
   const fetchAllUsers = async () => {
-    const res = await fetch('http://localhost:8080/api/admin/users');
+    const res = await fetch(`${API_BASE_URL}/api/admin/users`);
     const data = await res.json();
     setUsers(data);
   };
 
   const fetchAttendance = async () => {
-    const res = await fetch('http://localhost:8080/api/auth/attendance');
+    const res = await fetch(`${API_BASE_URL}/api/auth/attendance`);
     const allData = await res.json();
 
     const filtered = allData.filter(entry =>
